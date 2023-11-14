@@ -1,4 +1,4 @@
-import bpy
+import bpy, mathutils
 
 bpy.context.scene.unit_settings.system = 'METRIC'
 bpy.context.scene.unit_settings.length_unit = 'MILLIMETERS'
@@ -53,4 +53,13 @@ bpy.context.object.rigid_body.collision_shape = 'SPHERE'
 bpy.context.object.rigid_body.friction = 1
 bpy.context.object.rigid_body.restitution = 0
 bpy.context.object.rigid_body.linear_damping = 0.7
+bpy.data.objects["Coupole"].select_set(True)
+bpy.data.objects["Sphere"].select_set(False)
+test = mathutils.bvhtree.BVHTree.find_nearest(bpy.data.objects["Coupole"].data.vertices,mathutils.Vector((-1, -1, 1)), 0.1)
+bpy.data.objects["Coupole"].__getattribute__
 
+
+def distance():
+    vehicule = bpy.data.objects["Coupole"]
+    verts = [vert.co for vert in vehicule.data.vertices]
+    test = verts.index(mathutils.Vector((1, -1, -1)))
