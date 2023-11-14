@@ -21,28 +21,43 @@ sub_layer_collection = recurLayerCollection(layer_collection, 'picar_coll')
 bpy.context.view_layer.active_layer_collection = sub_layer_collection
 
 
-wheel_radius = 6.35/2
-wheel_width = 2.8
-picar_length = 23.5
-picar_height = 4.75    
-picar_width = 8
+wheel_radius = 6.35/2/100
+wheel_width = 2.8/100
+picar_length = 23.5/100
+picar_height = 4.75/100    
+picar_width = 8/100
+
+bpy.ops.object.empty_add(
+    location=(0, -picar_length/2 + 4.12/100, 0),
+    scale=(1,1,1)
+    )
+back_car = bpy.context.active_object
+back_car.name = "back_car"
 
 bpy.ops.mesh.primitive_cube_add(
     size=1,
     location=(0, 0, picar_height),
-    scale=(picar_width, picar_length, 0.3)
+    scale=(picar_width, picar_length, 0.3/100)
 )
 
 main_body = bpy.context.active_object
 main_body.name = "main_body"
 
+child_matrix_world = main_body.matrix_world.copy()
+
+# Set the parent while keeping the transformation
+main_body.parent = back_car
+
+# Restore the child's world matrix
+main_body.matrix_world = child_matrix_world
+
 for i in range(0, 4):
-    if (i < 2): back_wheel_distance = -picar_length/2 + 4.12
-    else: back_wheel_distance = picar_length/2 - 4.7625
+    if (i < 2): back_wheel_distance = -picar_length/2 + 4.12/100
+    else: back_wheel_distance = picar_length/2 - 4.7625/100
     bpy.ops.mesh.primitive_cylinder_add(
         radius=wheel_radius,
-        depth=2.8,
-        location=((-1)**i*(picar_width/2 + wheel_width/2 + 0.1), back_wheel_distance, wheel_radius-picar_height),
+        depth=2.8/100,
+        location=((-1)**i*(picar_width/2 + wheel_width/2 + 0.1/100), back_wheel_distance, wheel_radius-picar_height),
         scale=(1, 1, 1),
         rotation=(0, 90*np.pi/180, 0)
     )
@@ -51,12 +66,12 @@ for i in range(0, 4):
     wheel_object.name = f"wheel_{i}"
     wheel_object.parent = main_body
 
-line_sensor_height = 0.3
-line_sensor_length = 3
-line_sensor_width = 12.3825
-line_sensor_elevation = 1.9
-sensors_distances = 1.9
-sensor_height = 2.3
+line_sensor_height = 0.3/100
+line_sensor_length = 3/100
+line_sensor_width = 12.3825/100
+line_sensor_elevation = 1.9/100
+sensors_distances = 1.9/100
+sensor_height = 2.3/100
 
 bpy.ops.mesh.primitive_cube_add(
     size=1,
@@ -69,7 +84,7 @@ line_sensor_object.parent = main_body
 
 for i in range(0, 5):
     bpy.ops.mesh.primitive_cylinder_add(
-        radius=0.2,
+        radius=0.2/100,
         depth= sensor_height,
         location=((i-2)*sensors_distances, 1/4*line_sensor_length, -sensor_height/2-line_sensor_height),
         rotation=(0, 0, 0)
@@ -80,8 +95,8 @@ for i in range(0, 5):
 
 bpy.ops.mesh.primitive_cube_add(
     size=1,
-    location=(0, picar_length/2, 2),
-    scale=(2, 0.5, 1)
+    location=(0, picar_length/2, 2/100),
+    scale=(2/100, 0.5/100, 1/100)
 )
 
 other_object = bpy.context.active_object
