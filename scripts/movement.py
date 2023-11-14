@@ -64,32 +64,15 @@ class picar:
         bpy.context.scene.tool_settings.transform_pivot_point = 'BOUNDING_BOX_CENTER'
         bpy.context.scene.cursor.location = [0,0,0]
         bpy.ops.object.select_all(action='DESELECT')
-        # bpy.data.objects['turningpoint'].select_set(True)
-        # bpy.ops.object.delete()
+        bpy.data.objects['turningpoint'].select_set(True)
+        bpy.ops.object.delete()
         # bpy.data.objects["main_body"].select_set(True)
         # bpy.data.objects["wheel_3"].select_set(True)
         # bpy.data.objects["wheel_2"].select_set(True)
 
     
     def test(self):
-        if self.front_wheels.real_angle == 0:
-            print("Abort")
-            return None
-        bpy.ops.object.select_all(action='DESELECT')
-        bpy.data.objects["back_car"].select_set(True)
-        radius = self.turningradius()
-        bpy.ops.object.empty_add(
-        location=(radius, 0, 0),
-        scale=(1,1,1)
-        )
-        turningpoint = bpy.context.active_object
-        turningpoint.name = "turningpoint"
-        turningpoint.parent = self.blendercar
-        # bpy.context.scene.cursor.location = turningpoint.matrix_world.translation
-        bpy.ops.view3d.snap_cursor_to_selected(ctx, use_offset=False)
-        bpy.context.scene.tool_settings.transform_pivot_point = 'CURSOR'
-        bpy.data.objects["back_car"].select_set(True)
-
+        print("test")
     def turningradius(self):
         return self.wheel_base/np.tan(np.deg2rad(self.front_wheels.real_angle))
 
@@ -122,13 +105,13 @@ class front_wheels:
         self.real_angle = degrees(self.wheel2.rotation_euler[0])
     def update(self):
         self.get_realanglefromblender()
-        self.wheel2.rotation_euler = [radians(self.wanted_angle), self.wheel2.rotation_euler[1], self.wheel2.rotation_euler[2]] 
-        # if np.abs(self.wanted_angle - self.real_angle) < 1  and np.abs(self.wanted_angle - self.real_angle) != 0:
-        #         self.wheel2.rotation_euler = [radians(self.wanted_angle), self.wheel2.rotation_euler[1], self.wheel2.rotation_euler[2]] 
-        # elif self.wanted_angle < self.real_angle:
-        #        self.wheel2.rotation_euler = [self.wheel2.rotation_euler[0] - radians(1), self.wheel2.rotation_euler[1], self.wheel2.rotation_euler[2]] 
-        # elif self.wanted_angle > self.real_angle:
-        #        self.wheel2.rotation_euler = [self.wheel2.rotation_euler[0] + radians(1), self.wheel2.rotation_euler[1], self.wheel2.rotation_euler[2]] 
+        # self.wheel2.rotation_euler = [radians(self.wanted_angle), self.wheel2.rotation_euler[1], self.wheel2.rotation_euler[2]] 
+        if np.abs(self.wanted_angle - self.real_angle) < 1  and np.abs(self.wanted_angle - self.real_angle) != 0:
+                self.wheel2.rotation_euler = [radians(self.wanted_angle), self.wheel2.rotation_euler[1], self.wheel2.rotation_euler[2]] 
+        elif self.wanted_angle < self.real_angle:
+               self.wheel2.rotation_euler = [self.wheel2.rotation_euler[0] - radians(1), self.wheel2.rotation_euler[1], self.wheel2.rotation_euler[2]] 
+        elif self.wanted_angle > self.real_angle:
+               self.wheel2.rotation_euler = [self.wheel2.rotation_euler[0] + radians(1), self.wheel2.rotation_euler[1], self.wheel2.rotation_euler[2]] 
         self.wheel3.rotation_euler = self.wheel2.rotation_euler
 
 car1 = picar() 

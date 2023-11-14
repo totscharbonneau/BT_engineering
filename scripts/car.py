@@ -29,6 +29,7 @@ picar_width = 8/100
 
 bpy.ops.object.empty_add(
     location=(0, -picar_length/2 + 4.12/100, 0),
+    radius=0.01,
     scale=(1,1,1)
     )
 back_car = bpy.context.active_object
