@@ -133,7 +133,7 @@ class front_wheels:
                self.wheel2.rotation_euler = [self.wheel2.rotation_euler[0] + radians(1), self.wheel2.rotation_euler[1], self.wheel2.rotation_euler[2]] 
         self.wheel3.rotation_euler = self.wheel2.rotation_euler
 
-car1 = picar() 
+car1 = picar()
 bpy.context.scene.frame_set(0)
 # bpy.data.objects["main_body"].select_set(True)
 # bpy.data.objects["wheel_2"].select_set(True)

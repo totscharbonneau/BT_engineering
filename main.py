@@ -64,6 +64,7 @@ def coupoleGen():
     bpy.context.object.rigid_body.mesh_source = 'BASE'
     bpy.context.object.rigid_body.friction = 1
     bpy.context.object.rigid_body.restitution = 0
+    bpy.context.object.rigid_body.kinematic = True
     for obj in bpy.data.objects:
         obj.select_set(False)
     bpy.data.objects["CubeCoupoleGen"].select_set(True)
@@ -163,4 +164,4 @@ def distance(picar, distance_sensor):
 setBlenderEnv()
 picar, distance_sensor = picarGen()
 bille = billeGen()
-bille.location = [0, -picar_length/2 + 0.05, picar_height+0.015]
+bille.location = [0, picar_length/2 - 4.7625/100, picar_height+0.015]
