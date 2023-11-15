@@ -22,8 +22,9 @@ bpy.ops.object.editmode_toggle()
 bpy.context.object.scale[0] = 1.00352
 bpy.context.object.scale[1] = 1.00352
 bpy.context.object.scale[2] = 1.00352
+for obj in bpy.data.objects:
+    obj.select_set(False)
 bpy.data.objects["Cube"].select_set(True)
-bpy.data.objects["Sphere"].select_set(False)
 bpy.context.view_layer.objects.active = bpy.data.objects["Cube"]
 bpy.ops.object.modifier_add(type='BOOLEAN')
 bpy.context.object.modifiers["Boolean"].object = bpy.data.objects["Sphere"]
@@ -39,13 +40,14 @@ bpy.context.object.rigid_body.collision_shape = 'MESH'
 bpy.context.object.rigid_body.mesh_source = 'BASE'
 bpy.context.object.rigid_body.friction = 1
 bpy.context.object.rigid_body.restitution = 0
+for obj in bpy.data.objects:
+    obj.select_set(False)
 bpy.data.objects["Cube"].select_set(True)
-bpy.data.objects["Coupole"].select_set(False)
 bpy.context.view_layer.objects.active = bpy.data.objects["Cube"]
-bpy.ops.object.delete() 
+bpy.ops.object.delete()
 bpy.data.objects["Sphere"].select_set(True)
 bpy.context.view_layer.objects.active = bpy.data.objects["Sphere"]
-bpy.ops.object.delete() 
+bpy.ops.object.delete()
 bpy.ops.mesh.primitive_uv_sphere_add(enter_editmode=False, align='WORLD', location=(0, 0.015, 0.0223344), scale=(0.003995, 0.003995, 0.003995))
 bpy.ops.rigidbody.object_add()
 bpy.context.object.rigid_body.mass = 0.00517
