@@ -45,7 +45,7 @@ class picar:
         bpy.data.objects["back_car"].select_set(True)
         radius = self.turningradius()
         bpy.ops.object.empty_add(
-        location=(radius, 0, 0),
+        location=(np.sign(self.front_wheels.real_angle)*radius, 0, 0),
         scale=(1,1,1)
         )
         turningpoint = bpy.context.active_object
@@ -72,9 +72,28 @@ class picar:
 
     
     def test(self):
-        print("test")
+        if self.front_wheels.real_angle == 0:
+            print("Abort")
+            return None
+        bpy.ops.object.select_all(action='DESELECT')
+        bpy.data.objects["back_car"].select_set(True)
+        radius = self.turningradius()
+        bpy.ops.object.empty_add(
+        location=(np.sign(self.front_wheels.real_angle)*radius, 0, 0),
+        scale=(1,1,1)
+        )
+        turningpoint = bpy.context.active_object
+        turningpoint.name = "turningpoint"
+        turningpoint.parent = self.blendercar
+        # bpy.context.scene.cursor.location = turningpoint.location
+        bpy.ops.view3d.snap_cursor_to_active(get_contexteoverwrite())
+        bpy.context.scene.tool_settings.transform_pivot_point = 'CURSOR'
+        bpy.data.objects["back_car"].select_set(True)
+
+        rotationrad = -np.sign(self.front_wheels.real_angle)*self.back_wheels.direction*(self.back_wheels.currentspeed*1/100/24)/radius
+
     def turningradius(self):
-        return self.wheel_base/np.tan(np.deg2rad(self.front_wheels.real_angle))
+        return self.wheel_base/np.tan(np.deg2rad(np.abs(self.front_wheels.real_angle)))
 
 
 class back_wheels:
@@ -120,6 +139,7 @@ bpy.context.scene.frame_set(0)
 # bpy.data.objects["wheel_2"].select_set(True)
 # bpy.data.objects["wheel_3"].select_set(True)
 car1.back_wheels.speed(20)
+# car1.front_wheels.wanted_angle = -15
 # car1.front_wheels.update()
 # car1.front_wheels.update()
 # car1.test()
@@ -128,6 +148,6 @@ car1.back_wheels.speed(20)
 
 for i in range(0,250):
     if i == 40:
-        car1.front_wheels.wanted_angle = 15
+        car1.front_wheels.wanted_angle = -15
     bpy.context.scene.frame_set(i)
     car1.move()

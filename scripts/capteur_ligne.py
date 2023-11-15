@@ -29,8 +29,6 @@ def line_sensor(track):
         overlap = obj1_BVHtree.overlap(obj_track_BVHtree)
 
         output.append(int(bool(overlap)))
-    # Check for collisions
-    
     
     return output
 

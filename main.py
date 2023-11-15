@@ -147,7 +147,7 @@ def picarGen():
     distance_sensor.name = "distance_sensor"
     distance_sensor.parent = main_body
     coupole = coupoleGen()
-    coupole.location = [0, -picar_length/2 + 4.12/100, 0.003]
+    coupole.location = [0, picar_length/2 - 4.7625/100, 0.003]
     coupole.parent = main_body
     return [back_car, distance_sensor]
 
