@@ -4,12 +4,6 @@ import bmesh
 from mathutils.bvhtree import BVHTree
 
 
-sensor0 = bpy.data.objects["Sensor_0"]
-sensor1 = bpy.data.objects["Sensor_1"]
-sensor2 = bpy.data.objects["Sensor_2"]
-sensor3 = bpy.data.objects["Sensor_3"]
-sensor4 = bpy.data.objects["Sensor_4"]
-
 route = bpy.data.objects["plane_obj1"]
 
 def line_sensor(track):
