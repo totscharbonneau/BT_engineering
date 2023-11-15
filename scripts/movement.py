@@ -114,15 +114,15 @@ class picar():
                     case [1,1,0,0,0]:
                         self.front_wheels.wanted_angle += -3
                     case [0,1,0,0,0]:
-                        self.front_wheels.wanted_angle += -2
-                    case [0, 1, 1, 0, 0]:
                         self.front_wheels.wanted_angle += -1
+                    case [0, 1, 1, 0, 0]:
+                        self.front_wheels.wanted_angle = self.front_wheels.wanted_angle*0.75 
                     case [0, 0, 1, 0, 0]:
                         None
                     case [0, 0, 1, 1, 0]:
-                        self.front_wheels.wanted_angle += 1
+                        self.front_wheels.wanted_angle = self.front_wheels.wanted_angle*0.75  
                     case [0, 0, 0, 1, 0]:
-                        self.front_wheels.wanted_angle += 2
+                        self.front_wheels.wanted_angle += 1
                     case [0, 0, 0, 1, 1]:
                         self.front_wheels.wanted_angle += 3
                     case [0, 0, 0, 0, 1]:
@@ -138,6 +138,11 @@ class picar():
             case "STOP":
                 print("State = STOP")
                 # Add code for the STOP state
+            case "TEST":
+                self.back_wheels.speed(10)
+                if bpy.context.scene.frame_current == 10:
+                    self.front_wheels.wanted_angle = 15
+
             case _:
                 print("Invalid state")
 
@@ -156,6 +161,8 @@ class picar():
             case "STOP":
                 None
                 # Add code for the STOP state
+            case "TEST":
+                return self.currentState
             case _:
                 print(self.currentState)
                 print("Invalid state")
@@ -224,13 +231,13 @@ class front_wheels:
         if np.abs(self.wanted_angle) > self.maxangle:
             self.wanted_angle = np.sign(self.wanted_angle)*self.maxangle
         self.get_realanglefromblender()
-        # self.wheel2.rotation_euler = [radians(self.wanted_angle), self.wheel2.rotation_euler[1], self.wheel2.rotation_euler[2]] 
-        if np.abs(self.wanted_angle - self.real_angle) < 1  and np.abs(self.wanted_angle - self.real_angle) != 0:
-                self.wheel2.rotation_euler = [radians(self.wanted_angle), self.wheel2.rotation_euler[1], self.wheel2.rotation_euler[2]] 
-        elif self.wanted_angle < self.real_angle:
-               self.wheel2.rotation_euler = [self.wheel2.rotation_euler[0] - radians(1), self.wheel2.rotation_euler[1], self.wheel2.rotation_euler[2]] 
-        elif self.wanted_angle > self.real_angle:
-               self.wheel2.rotation_euler = [self.wheel2.rotation_euler[0] + radians(1), self.wheel2.rotation_euler[1], self.wheel2.rotation_euler[2]] 
+        self.wheel2.rotation_euler = [radians(self.wanted_angle), self.wheel2.rotation_euler[1], self.wheel2.rotation_euler[2]] 
+        # if np.abs(self.wanted_angle - self.real_angle) < 1  and np.abs(self.wanted_angle - self.real_angle) != 0:
+        #         self.wheel2.rotation_euler = [radians(self.wanted_angle), self.wheel2.rotation_euler[1], self.wheel2.rotation_euler[2]] 
+        # elif self.wanted_angle < self.real_angle:
+        #        self.wheel2.rotation_euler = [self.wheel2.rotation_euler[0] - radians(1), self.wheel2.rotation_euler[1], self.wheel2.rotation_euler[2]] 
+        # elif self.wanted_angle > self.real_angle:
+        #        self.wheel2.rotation_euler = [self.wheel2.rotation_euler[0] + radians(1), self.wheel2.rotation_euler[1], self.wheel2.rotation_euler[2]] 
         self.wheel3.rotation_euler = self.wheel2.rotation_euler
 
 car1 = picar()
