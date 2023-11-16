@@ -4,26 +4,26 @@ class SimLineFollower:
     __sensors = None
     __sensorsMesh = tuple(bmesh.new() for i in range(0, 5))
     __trackTree = None
-    __outputRaw = tuple(int() for i in range(0, 5))
     __references = None
     
     def __init__(self, parent, address=None, references=tuple(int(512) for i in range(0, 5))):
         self.__references = references
-        self.__sensors = tuple(parent.__objects[f"lineSensor{i}"] for i in range(0, 5))
+        self.__sensors = tuple(parent._objects[f"lineSensor{i}"] for i in range(0, 5))
         trackMesh = bmesh.new()
-        trackMesh.from_mesh(parent.__objects["line"].data)
-        trackMesh.transform(parent.__objects["line"].matrix_world) 
-        self.__trackTree = mathutils.BVHTree.FromBMesh(trackMesh)
+        trackMesh.from_mesh(parent._objects["line"].data)
+        trackMesh.transform(parent._objects["line"].matrix_world) 
+        self.__trackTree = mathutils.bvhtree.BVHTree.FromBMesh(trackMesh)
         for i, sensorMesh in enumerate(self.__sensorsMesh):
             sensorMesh.from_mesh(self.__sensors[i].data)
     
     def read_raw(self):
+        output = []
         for i, sensorMesh in enumerate(self.__sensorsMesh):
             sensorMesh.transform(self.__sensors[i].matrix_world)
-            sensorTree = mathutils.BVHTree.FromBMesh(sensorMesh)
+            sensorTree = mathutils.bvhtree.BVHTree.FromBMesh(sensorMesh)
             overlap = sensorTree.overlap(self.__trackTree)
-            self.__output[i] = int(not(bool(overlap)))*1024
-        return self.__output
+            output.append(int(bool(overlap))*1024)
+        return output
     
     def read_analog(self, trys=None):
         return self.read_raw()
@@ -32,9 +32,9 @@ class SimLineFollower:
         lt = self.read_analog()
         digital_list = []
         for i in range(0, 5):
-            if lt[i] > self.__references[i]:
+            if lt[i] < self.__references[i]:
                 digital_list.append(0)
-            elif lt[i] < self.__references[i]:
+            elif lt[i] > self.__references[i]:
                 digital_list.append(1)
             else:
                 digital_list.append(-1)
