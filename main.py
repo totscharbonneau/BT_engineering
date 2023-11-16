@@ -6,10 +6,15 @@ with open("control/control.py") as f:
     code = f.read()
     exec(code)
 
+with open("control/state_machine.py") as f:
+    code = f.read()
+    exec(code)
+
 SIMULATION = True
-RESET = True
+RESET = False
 
 if(SIMULATION):
     api = SimAPI(RESET)
 
-Control(api).control()
+SM = StateMachine(api)
+SM.loopStateMachine()

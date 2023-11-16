@@ -2,7 +2,7 @@ import numpy, math
 
 class SimFrontWheels:
     __real_angle = 0
-    __wanted_angle = 0
+    wanted_angle = 0
     __maxangle = 15
     __wheel0 = None
     __wheel2 = None
@@ -26,10 +26,10 @@ class SimFrontWheels:
         return self.__real_angle
     
     def update(self):
-        if numpy.abs(self.__wanted_angle) > self.__maxangle:
-            self.__wanted_angle = numpy.sign(self.__wanted_angle)*self.maxangle
+        if numpy.abs(self.wanted_angle) > self.__maxangle:
+            self.wanted_angle = numpy.sign(self.wanted_angle)*self.maxangle
         self.getRealAngleFromBlender()
-        self.__wheel2.rotation_euler = [math.radians(self.__wanted_angle), self.__wheel2.rotation_euler[1], self.__wheel2.rotation_euler[2]] 
+        self.__wheel2.rotation_euler = [math.radians(self.wanted_angle), self.__wheel2.rotation_euler[1], self.__wheel2.rotation_euler[2]] 
         self.__wheel3.rotation_euler = self.__wheel2.rotation_euler
 
     def turningradius(self):

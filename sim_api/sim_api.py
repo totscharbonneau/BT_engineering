@@ -46,7 +46,7 @@ objNames = {
 class SimAPI:
     _objects = None
 
-    ultrasonicAvoidance = SimUltrasonicAvoidance()
+    ultrasonicAvoidance = None
     lineFollower = None
     backWheels = None
     frontWheels = None
@@ -60,6 +60,7 @@ class SimAPI:
         self._objects = dict()
         for key, value in objNames.items():
             self._objects[key] = bpy.data.objects[value]
+        self.ultrasonicAvoidance = SimUltrasonicAvoidance(parent=self)
         self.lineFollower = SimLineFollower(parent=self)
         self.backWheels = SimBackWheels(parent=self)
         self.frontWheels = SimFrontWheels(parent=self, simBackWheels=self.backWheels)
