@@ -119,5 +119,184 @@ obj_scale(cube_bool1,500,2000,20)
 obj_location(cube_bool2,500,0,0)
 obj_scale(cube_bool2,500,2000,20)
 
-
 # MODIFICATION DES OBJETS FINI
+
+
+##### MODIFICATION BOOLEAN #####
+
+# COURBE 1
+bpy.ops.object.select_all(action='DESELECT')
+
+bpy.data.objects["courbe1"].select_set(True)
+bpy.context.view_layer.objects.active = bpy.data.objects["courbe1"]
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bool_modifier = bpy.context.object.modifiers[-1]
+bool_modifier.name = "Boolean"
+bool_modifier.operation = 'DIFFERENCE'
+
+bool_modifier.object = bpy.data.objects["sphere_bool1"]
+bpy.ops.object.modifier_apply({"object": bpy.context.active_object}, modifier=bool_modifier.name)
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bool_modifier = bpy.context.object.modifiers[-1]
+bool_modifier.name = "Boolean"
+bool_modifier.operation = 'DIFFERENCE'
+
+bool_modifier.object = bpy.data.objects["cube_bool2"]
+bpy.ops.object.modifier_apply({"object": bpy.context.active_object}, modifier=bool_modifier.name)
+
+# Changez l'échelle en Z à 0
+bpy.context.active_object.scale.z = 0.0
+
+# COURBE 2
+bpy.ops.object.select_all(action='DESELECT')
+
+bpy.data.objects["courbe2"].select_set(True)
+bpy.context.view_layer.objects.active = bpy.data.objects["courbe2"]
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bool_modifier = bpy.context.object.modifiers[-1]
+bool_modifier.name = "Boolean"
+bool_modifier.operation = 'DIFFERENCE'
+
+bool_modifier.object = bpy.data.objects["sphere_bool2"]
+bpy.ops.object.modifier_apply({"object": bpy.context.active_object}, modifier=bool_modifier.name)
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bool_modifier = bpy.context.object.modifiers[-1]
+bool_modifier.name = "Boolean"
+bool_modifier.operation = 'DIFFERENCE'
+
+bool_modifier.object = bpy.data.objects["cube_bool1"]
+bpy.ops.object.modifier_apply({"object": bpy.context.active_object}, modifier=bool_modifier.name)
+
+# Changez l'échelle en Z à 0
+bpy.context.active_object.scale.z = 0.0
+
+# COURBE 3
+bpy.ops.object.select_all(action='DESELECT')
+
+bpy.data.objects["courbe3"].select_set(True)
+bpy.context.view_layer.objects.active = bpy.data.objects["courbe3"]
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bool_modifier = bpy.context.object.modifiers[-1]
+bool_modifier.name = "Boolean"
+bool_modifier.operation = 'DIFFERENCE'
+
+bool_modifier.object = bpy.data.objects["sphere_bool3"]
+bpy.ops.object.modifier_apply({"object": bpy.context.active_object}, modifier=bool_modifier.name)
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bool_modifier = bpy.context.object.modifiers[-1]
+bool_modifier.name = "Boolean"
+bool_modifier.operation = 'DIFFERENCE'
+
+bool_modifier.object = bpy.data.objects["cube_bool1"]
+bpy.ops.object.modifier_apply({"object": bpy.context.active_object}, modifier=bool_modifier.name)
+
+# COURBE 4
+bpy.ops.object.select_all(action='DESELECT')
+
+bpy.data.objects["courbe4"].select_set(True)
+bpy.context.view_layer.objects.active = bpy.data.objects["courbe4"]
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bool_modifier = bpy.context.object.modifiers[-1]
+bool_modifier.name = "Boolean"
+bool_modifier.operation = 'DIFFERENCE'
+
+bool_modifier.object = bpy.data.objects["sphere_bool4"]
+bpy.ops.object.modifier_apply({"object": bpy.context.active_object}, modifier=bool_modifier.name)
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bool_modifier = bpy.context.object.modifiers[-1]
+bool_modifier.name = "Boolean"
+bool_modifier.operation = 'DIFFERENCE'
+
+bool_modifier.object = bpy.data.objects["cube_bool2"]
+bpy.ops.object.modifier_apply({"object": bpy.context.active_object}, modifier=bool_modifier.name)
+
+
+# MOUVEMENT CUBE 2
+
+bpy.ops.object.select_all(action='DESELECT')
+
+bpy.data.objects["cube_bool2"].select_set(True)
+bpy.context.view_layer.objects.active = bpy.data.objects["cube_bool2"]
+bpy.ops.transform.rotate(value=0.52, orient_axis='Z') 
+bpy.ops.transform.translate(value=(0, -0.53, 0))
+
+# COURBE 3
+bpy.ops.object.select_all(action='DESELECT')
+
+bpy.data.objects["courbe3"].select_set(True)
+bpy.context.view_layer.objects.active = bpy.data.objects["courbe3"]
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bool_modifier = bpy.context.object.modifiers[-1]
+bool_modifier.name = "Boolean"
+bool_modifier.operation = 'DIFFERENCE'
+
+bool_modifier.object = bpy.data.objects["cube_bool2"]
+bpy.ops.object.modifier_apply({"object": bpy.context.active_object}, modifier=bool_modifier.name)
+
+# Changez l'échelle en Z à 0
+bpy.context.active_object.scale.z = 0.0
+
+# MOUVEMENT CUBE 2
+
+bpy.ops.object.select_all(action='DESELECT')
+
+bpy.data.objects["cube_bool2"].select_set(True)
+bpy.context.view_layer.objects.active = bpy.data.objects["cube_bool2"]
+bpy.ops.transform.translate(value=(-0.16, 3.53, 0))
+
+# COURBE 4
+bpy.ops.object.select_all(action='DESELECT')
+
+bpy.data.objects["courbe4"].select_set(True)
+bpy.context.view_layer.objects.active = bpy.data.objects["courbe4"]
+
+bpy.ops.object.modifier_add(type='BOOLEAN')
+bool_modifier = bpy.context.object.modifiers[-1]
+bool_modifier.name = "Boolean"
+bool_modifier.operation = 'DIFFERENCE'
+
+bool_modifier.object = bpy.data.objects["cube_bool2"]
+bpy.ops.object.modifier_apply({"object": bpy.context.active_object}, modifier=bool_modifier.name)
+
+# Changez l'échelle en Z à 0
+bpy.context.active_object.scale.z = 0.0
+
+##### MODIFICATION BOOLEAN #####
+
+
+# SUPPRIMER LES OBJETS DE MODIFICATION BOOLEAN
+bpy.ops.object.select_all(action='DESELECT')
+
+bpy.data.objects.remove(bpy.data.objects.get("sphere_bool1"), do_unlink=True)
+bpy.data.objects.remove(bpy.data.objects.get("sphere_bool2"), do_unlink=True)
+bpy.data.objects.remove(bpy.data.objects.get("sphere_bool3"), do_unlink=True)
+bpy.data.objects.remove(bpy.data.objects.get("sphere_bool4"), do_unlink=True)
+bpy.data.objects.remove(bpy.data.objects.get("cube_bool1"), do_unlink=True)
+bpy.data.objects.remove(bpy.data.objects.get("cube_bool2"), do_unlink=True)
+# FIN SUPPRIMER LES OBJETS DE MODIFICATION BOOLEAN
+
+
+# FUSIONNER LES LIGNES POUR DÉPLACEMENT 
+bpy.ops.object.select_all(action='DESELECT')
+
+bpy.data.objects["courbe1"].select_set(True)
+bpy.data.objects["courbe2"].select_set(True)
+bpy.data.objects["courbe3"].select_set(True)
+bpy.data.objects["courbe4"].select_set(True)
+
+bpy.context.view_layer.objects.active = bpy.data.objects["courbe1"]
+bpy.ops.object.join()
+
+bpy.ops.transform.rotate(value=0.95, orient_axis='Z') 
+bpy.ops.transform.translate(value=(0.12, 0.1, 0))
+bpy.ops.object.select_all(action='DESELECT')
+# FIN FUSIONNER LES LIGNES POUR DÉPLACEMENT 
