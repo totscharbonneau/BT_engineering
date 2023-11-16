@@ -43,10 +43,11 @@ objNames = {
     "wheel3": "wheel_3"
 }
 
+
 class SimAPI:
     _objects = None
 
-    ultrasonicAvoidance = SimUltrasonicAvoidance()
+    ultrasonicAvoidance = None
     lineFollower = None
     backWheels = None
     frontWheels = None
@@ -56,10 +57,13 @@ class SimAPI:
             SimContext.setBlenderEnv()
             ShapeFactory.picarGen(objNames["picar"], [0, -picar_length/2 + 4.12/100, 0])
             ShapeFactory.marbleGen(objNames["marble"], [0, picar_length/2 - 4.7625/100, picar_height+0.015])
-            TrackFactory.track1(objNames["line"], objNames["obstacle"], (0,0.575,0), (0,0.625,0))
+            # TrackFactory.track1(objNames["line"], objNames["obstacle"], (0,0.575,0), (0,0.625,0))
+            TrackFactory.track2(objNames["line"], objNames["obstacle"], (0,0.575,0), (0,0,-10))
+            # TrackFactory.track3(objNames["line"], objNames["obstacle"], (0,0.575,0), (0,0,-10))
         self._objects = dict()
         for key, value in objNames.items():
             self._objects[key] = bpy.data.objects[value]
+        self.ultrasonicAvoidance = SimUltrasonicAvoidance(parent=self)
         self.lineFollower = SimLineFollower(parent=self)
         self.backWheels = SimBackWheels(parent=self)
         self.frontWheels = SimFrontWheels(parent=self, simBackWheels=self.backWheels)

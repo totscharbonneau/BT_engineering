@@ -43,3 +43,12 @@ obj_location(plane_obj2,0,500,0)
 obj_scale(plane_obj2,largeur,150,0)
 obj_rotation(plane_obj2,90)
 # MODIFICATION DES OBJETS FINI
+
+bpy.ops.object.select_all(action='DESELECT')
+
+bpy.data.objects["plane_obj1"].select_set(True)
+bpy.data.objects["plane_obj2"].select_set(True)
+
+bpy.context.view_layer.objects.active = bpy.data.objects["plane_obj1"]
+bpy.ops.object.join()
+
