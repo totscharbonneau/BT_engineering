@@ -1,7 +1,7 @@
 import bpy
 
 class SimContext:
-    def setBlenderEnv():
+    def setBlenderEnv(numberOfCycles):
         for obj in bpy.data.objects:
             obj.select_set(True)
         bpy.ops.object.delete()
@@ -12,3 +12,4 @@ class SimContext:
             bpy.ops.rigidbody.world_add()
         bpy.context.scene.rigidbody_world.time_scale = 1
         bpy.context.scene.rigidbody_world.substeps_per_frame = 70
+        bpy.context.scene.frame_end = numberOfCycles

@@ -41,6 +41,8 @@ EXIT = None
 class StateMachine:
     _api = None
     _stateMachine = None
+    _targetAngle = 0
+    _targetSpeed = 0
 
     def __init__(self, api):
         self._api = api
@@ -110,9 +112,33 @@ class StateMachine:
                         return EXIT
 
     def loopStateMachine(self):
-        me = self
         stateobj = FollowLine(False, False)
-        for i in range(500):
-            stateobj = StateMachine.doStateAction(self=me, state=stateobj)
-            bpy.context.scene.frame_set(i)
-            self._api.move() 
+        for i in range(NUMBEROFCYCLES):
+            print([i, stateobj])
+            stateobj = StateMachine.doStateAction(self=self, state=stateobj)
+            self.adjustAngle()
+            self.adjustSpeed()
+            self._api.move()
+            self._api.cycleAction(i)
+    
+    def adjustAngle(self):
+        realAngle = self._api.frontWheels.getRealAngle()
+        if(self._targetAngle > realAngle+5):
+            self._api.frontWheels.wanted_angle += 3
+            if(self._targetSpeed > 15):
+                self._targetSpeed = 15
+        elif(self._targetAngle < realAngle-5):
+            self._api.frontWheels.wanted_angle -= 3
+            if(self._targetSpeed > 15):
+                self._targetSpeed = 15
+        else:
+            self._api.frontWheels.wanted_angle = self._targetAngle
+            if(self._targetSpeed > 15):
+                self._targetSpeed = 15
+
+    def adjustSpeed(self):
+        realSpeed = self._api.backWheels.getCurrentSpeed()
+        if(self._targetSpeed > realSpeed):
+            self._api.backWheels.speed(realSpeed+1)
+        elif(self._targetSpeed < realSpeed):
+            self._api.backWheels.speed(realSpeed-2)

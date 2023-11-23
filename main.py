@@ -8,9 +8,10 @@ with open("control/state_machine.py") as f:
 
 SIMULATION = True
 RESET = True
+NUMBEROFCYCLES = 500
 
 if(SIMULATION):
-    api = SimAPI(RESET)
+    api = SimAPI(RESET, NUMBEROFCYCLES)
 
 stateMachine = StateMachine(api)
 stateMachine.loopStateMachine()

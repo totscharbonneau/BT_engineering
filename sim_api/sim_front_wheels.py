@@ -58,7 +58,6 @@ class SimFrontWheels:
 
         #clean up
         bpy.context.scene.tool_settings.transform_pivot_point = 'BOUNDING_BOX_CENTER'
-        bpy.context.scene.cursor.location = (0,0,0)
         bpy.ops.object.select_all(action='DESELECT')
         bpy.data.objects['turningpoint'].select_set(True)
         bpy.ops.object.delete()

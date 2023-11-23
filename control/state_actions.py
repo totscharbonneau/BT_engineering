@@ -13,9 +13,9 @@ class StateActions:
     def lineFollowerAction(self):
         self._stateActions.lineFollowerState = doLineFollowerStateAction(self, lineFollowerState=self._stateActions.lineFollowerState)
         self._api.backWheels.forward()
-        self._api.backWheels.speed(10)
+        self._targetSpeed = 20
         distance = self._api.ultrasonicAvoidance.get_distance()
-        if((distance < 13) & (distance >= 0)):
+        if((distance < 20) & (distance >= 0)):
             obstacle = True
         else:
             obstacle = False
@@ -27,9 +27,9 @@ class StateActions:
 
     def stopAction(self):
         self._api.backWheels.forward()
-        self._api.backWheels.speed(5)
+        self._targetSpeed = 5
         if(self._api.ultrasonicAvoidance.less_than(10.5) == 1):
-            self._api.backWheels.speed(0)
+            #self._api.backWheels.speed(0)
             stopped = True
         else:
             stopped = False
@@ -37,35 +37,37 @@ class StateActions:
 
     def backwardAction(self):
         self._api.backWheels.backward()
-        self._api.backWheels.speed(10)
-        if(self._api.ultrasonicAvoidance.less_than(25) == 0):
-            self._api.backWheels.speed(0)
-            done = True
+        distance = self._api.ultrasonicAvoidance.get_distance()
+        done = False
+        if(distance < 20):
+            self._targetSpeed = 20
+        elif(distance < 25):
+            self._targetSpeed = 5
         else:
-            done = False
+            #self._api.backWheels.speed(0)
+            done = True
         return done
 
     def goAroundAction(self):
         self._api.backWheels.forward()
-        self._api.backWheels.speed(10)
+        self._targetSpeed = 25
         done = False
         if(self._stateActions.goAroundState[0] == 'TURN_LEFT'):
-            self._api.frontWheels.wanted_angle += -1
+            self._targetAngle = -25
             self._stateActions.goAroundState[1] += 1
             if(self._stateActions.goAroundState[1] == 30):
                 self._stateActions.goAroundState[0] = 'RIGHT_AHEAD'
                 self._stateActions.goAroundState[1] = 0
         elif(self._stateActions.goAroundState[0] == 'RIGHT_AHEAD'):
-            if(self._api.frontWheels.getRealAngle() < 0):
-                self._api.frontWheels.wanted_angle += 1
+            self._targetAngle = 0
             self._stateActions.goAroundState[1] += 1
-            if(self._stateActions.goAroundState[1] == 120):
+            if(self._stateActions.goAroundState[1] == 70):
                 self._stateActions.goAroundState[0] = 'TURN_RIGHT'
                 self._stateActions.goAroundState[1] = 0
         elif(self._stateActions.goAroundState[0] == 'TURN_RIGHT'):
-            self._api.frontWheels.wanted_angle += 1
+            self._targetAngle = 15
             self._stateActions.goAroundState[1] += 1
-            if(self._stateActions.goAroundState[1] == 10):
+            if(self._stateActions.goAroundState[1] == 60):
                 self._stateActions.goAroundState[0] = 'TURN_LEFT'
                 self._stateActions.goAroundState[1] = 0
                 done = True
@@ -73,17 +75,17 @@ class StateActions:
         
     def tStop(self):
         self._api.backWheels.forward()
-        self._api.backWheels.speed(0)
+        #self._api.backWheels.speed(0)
         stopped = True
         test = True
         return stopped, test
 
     def finalBackward(self):
         self._api.backWheels.backward()
-        self._api.backWheels.speed(8)
+        self._targetSpeed = 10
         self._stateActions.lineFollowerState = doLineFollowerStateAction(self, lineFollowerState=self._stateActions.lineFollowerState)
         if(self._stateActions.lineFollowerState == None):
-            self._api.backWheels.speed(0)
+            #self._api.backWheels.speed(0)
             done = True
         else:
             done = False
@@ -91,6 +93,6 @@ class StateActions:
 
     def finalStop(self):
         self._api.backWheels.forward()
-        self._api.backWheels.speed(0)
+        #self._api.backWheels.speed(0)
         stopped = True
         return stopped
