@@ -4,18 +4,18 @@ with open("control/line_follower_state_machine.py") as f:
 
 class StateActions:
     lineFollowerState = RightAhead([0,0,1,0,0])
+    goAroundState = ['TURN_LEFT', 0]
+    
 
     def __init__(self):
         lineFollowerState = RightAhead([0,0,1,0,0])
 
     def lineFollowerAction(self):
-        print(self._stateActions.lineFollowerState)
         self._stateActions.lineFollowerState = doLineFollowerStateAction(self, lineFollowerState=self._stateActions.lineFollowerState)
         self._api.backWheels.forward()
         self._api.backWheels.speed(10)
         distance = self._api.ultrasonicAvoidance.get_distance()
-        print(distance)
-        if(distance < 13):
+        if((distance < 13) & (distance >= 0)):
             obstacle = True
         else:
             obstacle = False
@@ -23,7 +23,6 @@ class StateActions:
             finalT = True
         else:
             finalT = False
-        print(obstacle, finalT)
         return obstacle, finalT
 
     def stopAction(self):
@@ -38,7 +37,7 @@ class StateActions:
 
     def backwardAction(self):
         self._api.backWheels.backward()
-        self._api.backWheels.speed(8)
+        self._api.backWheels.speed(10)
         if(self._api.ultrasonicAvoidance.less_than(25) == 0):
             self._api.backWheels.speed(0)
             done = True
@@ -48,19 +47,28 @@ class StateActions:
 
     def goAroundAction(self):
         self._api.backWheels.forward()
-        self._api.backWheels.speed(8)
-        for i in range(30):
-            bpy.context.scene.frame_set(bpy.context.scene.frame_current+1)
-            self._api.move()
-            self._api.frontWheels.__wanted_angle += -3
-        for i in range(60):
-            bpy.context.scene.frame_set(bpy.context.scene.frame_current+1)
-            self._api.move()
-            self._api.frontWheels.__wanted_angle += 3
-        while(self._api.lineFollower.read_digital() != [0,0,1,0,0]):
-            bpy.context.scene.frame_set(bpy.context.scene.frame_current+1)
-            self._api.move()
-        done = True
+        self._api.backWheels.speed(10)
+        done = False
+        if(self._stateActions.goAroundState[0] == 'TURN_LEFT'):
+            self._api.frontWheels.wanted_angle += -1
+            self._stateActions.goAroundState[1] += 1
+            if(self._stateActions.goAroundState[1] == 30):
+                self._stateActions.goAroundState[0] = 'RIGHT_AHEAD'
+                self._stateActions.goAroundState[1] = 0
+        elif(self._stateActions.goAroundState[0] == 'RIGHT_AHEAD'):
+            if(self._api.frontWheels.getRealAngle() < 0):
+                self._api.frontWheels.wanted_angle += 1
+            self._stateActions.goAroundState[1] += 1
+            if(self._stateActions.goAroundState[1] == 120):
+                self._stateActions.goAroundState[0] = 'TURN_RIGHT'
+                self._stateActions.goAroundState[1] = 0
+        elif(self._stateActions.goAroundState[0] == 'TURN_RIGHT'):
+            self._api.frontWheels.wanted_angle += 1
+            self._stateActions.goAroundState[1] += 1
+            if(self._stateActions.goAroundState[1] == 10):
+                self._stateActions.goAroundState[0] = 'TURN_LEFT'
+                self._stateActions.goAroundState[1] = 0
+                done = True
         return done
         
     def tStop(self):

@@ -112,7 +112,7 @@ class StateMachine:
     def loopStateMachine(self):
         me = self
         stateobj = FollowLine(False, False)
-        for i in range(250):
+        for i in range(500):
             stateobj = StateMachine.doStateAction(self=me, state=stateobj)
             bpy.context.scene.frame_set(i)
             self._api.move() 

@@ -77,7 +77,7 @@ def lineFollowerCommonChoice(self, lineFollowerData):
     elif(lineFollowerData == [0,0,0,1,1]):
         nextLineFollowerData = LineFollowerActions.Right(self)
         return Right(nextLineFollowerData)
-    elif(lineFollowerData == [1,0,0,0,1]):
+    elif(lineFollowerData == [0,0,0,0,1]):
         nextLineFollowerData = LineFollowerActions.StrongRight(self)
         return StrongRight(nextLineFollowerData)
     return None

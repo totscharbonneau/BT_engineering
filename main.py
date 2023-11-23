@@ -11,7 +11,7 @@ with open("control/state_machine.py") as f:
     exec(code)
 
 SIMULATION = True
-RESET = False
+RESET = True
 
 if(SIMULATION):
     api = SimAPI(RESET)

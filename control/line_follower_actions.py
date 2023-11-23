@@ -1,6 +1,5 @@
 class LineFollowerActions:
     def RightAhead(self):
-        print(self._api.lineFollower.read_digital())
         return self._api.lineFollower.read_digital()
 
     def VeryWeakLeft(self):

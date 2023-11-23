@@ -1,12 +1,10 @@
-import bpy, time
+import bpy
 
 class SimUltrasonicAvoidance:
     def __init__(self, parent):
         self._parent = parent
 
     def distance(self):
-        timeout = 0.05
-        time.sleep(timeout)
         scene = bpy.context.scene
         deps = bpy.context.view_layer.depsgraph
         sensorLocation = self._parent._objects["distanceSensor"].matrix_world.translation
