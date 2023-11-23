@@ -36,7 +36,6 @@ objNames = {
     "lineSensor3": "Sensor_3",
     "lineSensor4": "Sensor_4",
     "line": "plane_obj1",
-    "obstacle": "obstacle_obj1",
     "wheel0": "wheel_0",
     "wheel1": "wheel_1",
     "wheel2": "wheel_2",
@@ -57,9 +56,9 @@ class SimAPI:
             SimContext.setBlenderEnv()
             ShapeFactory.picarGen(objNames["picar"], [0, -picar_length/2 + 4.12/100, 0])
             ShapeFactory.marbleGen(objNames["marble"], [0, picar_length/2 - 4.7625/100, picar_height+0.015])
-            TrackFactory.track1(objNames["line"], objNames["obstacle"], (0,0.575,0), (0,0.625,0))
-            # TrackFactory.track2(objNames["line"], objNames["obstacle"], (0,0.575,0), (0,0,-10))
-            # TrackFactory.track3(objNames["line"], objNames["obstacle"], (0,0.575,0), (0,0,-10))
+            #TrackFactory.track1(objNames["line"], "obstacle", (0,0.575,0), (0,0.625,0))
+            TrackFactory.track2(objNames["line"], (0,0.575,0))
+            #TrackFactory.track3(objNames["line"], (0,0.575,0))
         self._objects = dict()
         for key, value in objNames.items():
             self._objects[key] = bpy.data.objects[value]
