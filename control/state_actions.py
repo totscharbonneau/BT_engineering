@@ -101,16 +101,25 @@ class StateActions:
         stopped = True
         return stopped
     
+    def distanceParcourue(distanceTotal, delta_t, puissanceMoteurInitial):
+        vitesse = 0.0029*puissanceMoteurInitial - 0.0245
+        distanceTotal += delta_t * vitesse
+        return distanceTotal
+
+    ##### ACCELERATION #####
     def accelerationInit():
         # initialisation de l'accélération
         tempsDebut = time.time()
         return tempsDebut
 
     # POUR PICAR
-    def accelerationReel(tempsDebut,puissanceMoteurInitial, puissanceCible):
+    def accelerationReel(tempsDebut,puissanceMoteurInitial, puissanceCible, distanceTotal):
         accelerationTerminee = False
         tempsFin = time.time()
         delta_t = tempsFin - tempsDebut
+        # gestion de la distance total parcourue
+        distanceTotal = distanceParcourue(distanceTotal,delta_t,puissanceMoteurInitial)
+        # equation linéaire de la puissance moteur en fonction du temps
         ajustementEquation = (puissanceMoteurInitial - 7.4324)/-208.11      # mise en equation, voir Excel
         puissanceMoteur = 208.11*(delta_t + ajustementEquation) + 7.4324    # mise en equation, voir Excel
         #Gestion de risque sur l'intervalle de puissance des moteurs
@@ -122,7 +131,27 @@ class StateActions:
         if puissanceMoteur < 0 :
             puissanceMoteur = 0
         # il sera possible de fournir le tempsFin et la puissanceMoteur pour combler le tempsDebut et puissanceMoteurInitial de la prochaine itération
-        return tempsFin, puissanceMoteur, accelerationTerminee
+        return tempsFin, puissanceMoteur, accelerationTerminee, distanceTotal
+    
+    # POUR PICAR
+    def decelerationReel(tempsDebut,puissanceMoteurInitial,puissanceCible, distanceTotal):
+        accelerationTerminee = False
+        tempsFin = time.time()
+        delta_t = tempsFin - tempsDebut
+        # gestion de la distance total parcourue
+        distanceTotal = distanceParcourue(distanceTotal,delta_t,puissanceMoteurInitial)
+        # equation linéaire de la puissance moteur en fonction du temps
+        ajustementEquation = (puissanceMoteurInitial - 100)/-200        # mise en equation, voir Excel
+        puissanceMoteur = -200*(delta_t+ajustementEquation) + 100       # mise en equation, voir Excel
+        #Gestion de risque sur l'intervalle de puissance des moteurs
+        if puissanceMoteur < puissanceCible:
+            puissanceMoteur = puissanceCible
+            accelerationTerminee = True # la puissance cible est atteinte, on peut mettre fin à l'accélération
+        if puissanceMoteur > 100 :
+            puissanceMoteur = 100
+        if puissanceMoteur < 0 :
+            puissanceMoteur = 0
+        return tempsFin, puissanceMoteur, accelerationTerminee, distanceTotal
     
     # POUR SIMULATION
     def accelerationSimulation(tempsDebut,vitesseInitial, vitesseCible):
@@ -139,30 +168,13 @@ class StateActions:
             vitesse = 0
         return tempsFin, vitesse, accelerationTerminee
     
-    # POUR PICAR
-    def decelerationReel(tempsDebut,puissanceMoteurInitial,puissanceCible):
-        accelerationTerminee = False
-        tempsFin = time.time()
-        delta_t = tempsFin - tempsDebut
-        ajustementEquation = (puissanceMoteurInitial - 100)/-200        # mise en equation, voir Excel
-        puissanceMoteur = -200*(delta_t+ajustementEquation) + 100       # mise en equation, voir Excel
-        #Gestion de risque sur l'intervalle de puissance des moteurs
-        if puissanceMoteur < puissanceCible:
-            puissanceMoteur = puissanceCible
-            accelerationTerminee = True # la puissance cible est atteinte, on peut mettre fin à l'accélération
-        if puissanceMoteur > 100 :
-            puissanceMoteur = 100
-        if puissanceMoteur < 0 :
-            puissanceMoteur = 0
-        return tempsFin, puissanceMoteur, accelerationTerminee
-    
     # POUR SIMULATION
     def decelerationSimulation(tempsDebut,vitesseInitial, vitesseCible):
         accelerationTerminee = False
         tempsFin = time.time()
         delta_t = tempsFin - tempsDebut
         ajustementEquation = (vitesseInitial - 0.2607)/-0.5704          # mise en equation, voir Excel
-        vitesse = -0.5704*(delta_t + ajustementEquation) + 0.2607        # mise en equation, voir Excel
+        vitesse = -0.5704*(delta_t + ajustementEquation) + 0.2607       # mise en equation, voir Excel
         #Gestion de la vitesse maximal
         if vitesse < vitesseCible:
             vitesse = vitesseCible
@@ -170,4 +182,47 @@ class StateActions:
         if vitesse < 0:
             vitesse = 0
         return tempsFin, vitesse, accelerationTerminee
+    ##### FIN ACCELERATION #####
+
+    ##### VIRAGE #####
+    def virage(niveauDeVirage, angleVirageInitial=90, ):
+        # niveauDeVirage va de -4 à -1 pour un virage a gauche, de 1 à 4 pour un virage a droite et de 0 pour centrer les roues
+        if niveauDeVirage == 0:
+            angleVirage = 90
+        # virage à droite
+        if niveauDeVirage == 1:
+            angleVirage = angleVirageInitial + 1
+        if niveauDeVirage == 2:
+            angleVirage = angleVirageInitial + 3
+        if niveauDeVirage == 3:
+            angleVirage = angleVirageInitial + 6
+        if niveauDeVirage == 4:
+            angleVirage = angleVirageInitial + 10 
+
+        # virage à gauche
+        if niveauDeVirage == 1:
+            angleVirage = angleVirageInitial - 1
+        if niveauDeVirage == 2:
+            angleVirage = angleVirageInitial - 3
+        if niveauDeVirage == 3:
+            angleVirage = angleVirageInitial - 6
+        if niveauDeVirage == 4:
+            angleVirage = angleVirageInitial - 10
+
+        # gestion de l'intervalle maximum de virage
+        if  angleVirage > 135:
+            angleVirage = 135
+        if  angleVirage < 45:
+            angleVirage = 45 
+             
+
+        return angleVirage
+    ##### FIN VIRAGE #####
+
+    def calculDistanceArret(vitesseInitial):
+        # permet de calculer à quel distance il faut commencer la deceleration pour atteindre une distance precise
+        # a partir de la vitesse maximum selon les équations choisi, il faut 0.45s pour decelerer jusqu'a 0 m/s  
+        delta_t = 0.45 - ((vitesseInitial-0.2607)/-0.5704)  # mise en equation, voir Excel
+        distanceArret = 0.5*vitesseInitial*delta_t          # equation d'acceleration: x = 1/2(Vx + V0)t
+        return distanceArret
 
