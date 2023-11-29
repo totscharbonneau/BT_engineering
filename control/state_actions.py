@@ -106,22 +106,68 @@ class StateActions:
         tempsDebut = time.time()
         return tempsDebut
 
-    def acceleration(tempsDebut):
-        # il faut faire accelerationInit() en premier pour obtenir le tempsDebut
-        # déterminer la nouvelle vitesse
+    # POUR PICAR
+    def accelerationReel(tempsDebut,puissanceMoteurInitial, puissanceCible):
+        accelerationTerminee = False
         tempsFin = time.time()
         delta_t = tempsFin - tempsDebut
-        vitesse = 0.5704*delta_t + 0.0041 # équation de la vitesse en fonction du temps pour une accélération inférieur à 0.65m/s^2
-        puissanceMoteur = (vitesse+0.0245)/0.0029 # équation de la puissance des moteurs
-        return vitesse, puissanceMoteur
-
-    def deceleration(tempsDebut,vitesseInitial):
-        # il faut faire accelerationInit() en premier pour obtenir le tempsDebut
-        # déterminer la nouvelle vitesse
+        ajustementEquation = (puissanceMoteurInitial - 7.4324)/-208.11      # mise en equation, voir Excel
+        puissanceMoteur = 208.11*(delta_t + ajustementEquation) + 7.4324    # mise en equation, voir Excel
+        #Gestion de risque sur l'intervalle de puissance des moteurs
+        if puissanceMoteur > puissanceCible:
+            puissanceMoteur = puissanceCible
+            accelerationTerminee = True # la puissance cible est atteinte, on peut mettre fin à l'accélération
+        if puissanceMoteur > 100 :
+            puissanceMoteur = 100
+        if puissanceMoteur < 0 :
+            puissanceMoteur = 0
+        # il sera possible de fournir le tempsFin et la puissanceMoteur pour combler le tempsDebut et puissanceMoteurInitial de la prochaine itération
+        return tempsFin, puissanceMoteur, accelerationTerminee
+    
+    # POUR SIMULATION
+    def accelerationSimulation(tempsDebut,vitesseInitial, vitesseCible):
+        accelerationTerminee = False
         tempsFin = time.time()
         delta_t = tempsFin - tempsDebut
-        ajustementEquation = (vitesseInitial - 0.2607)/0.5704
-        vitesse = -0.5704*(delta_t+ajustementEquation) + 0.2607 # équation de la vitesse en fonction du temps pour une décélération supérieur à -0.65m/s^2
-        puissanceMoteur = (vitesse+0.0245)/0.0029 # équation de la puissance des moteurs
-        return vitesse, puissanceMoteur
+        ajustementEquation = (vitesseInitial - 0.0041)/-0.5704          # mise en equation, voir Excel
+        vitesse = 0.5704*(delta_t + ajustementEquation) + 0.004         # mise en equation, voir Excel
+        #Gestion de la vitesse maximal
+        if vitesse > vitesseCible:
+            vitesse = vitesseCible
+            accelerationTerminee = True # la puissance cible est atteinte, on peut mettre fin à l'accélération
+        if vitesse < 0:
+            vitesse = 0
+        return tempsFin, vitesse, accelerationTerminee
+    
+    # POUR PICAR
+    def decelerationReel(tempsDebut,puissanceMoteurInitial,puissanceCible):
+        accelerationTerminee = False
+        tempsFin = time.time()
+        delta_t = tempsFin - tempsDebut
+        ajustementEquation = (puissanceMoteurInitial - 100)/-200        # mise en equation, voir Excel
+        puissanceMoteur = -200*(delta_t+ajustementEquation) + 100       # mise en equation, voir Excel
+        #Gestion de risque sur l'intervalle de puissance des moteurs
+        if puissanceMoteur < puissanceCible:
+            puissanceMoteur = puissanceCible
+            accelerationTerminee = True # la puissance cible est atteinte, on peut mettre fin à l'accélération
+        if puissanceMoteur > 100 :
+            puissanceMoteur = 100
+        if puissanceMoteur < 0 :
+            puissanceMoteur = 0
+        return tempsFin, puissanceMoteur, accelerationTerminee
+    
+    # POUR SIMULATION
+    def decelerationSimulation(tempsDebut,vitesseInitial, vitesseCible):
+        accelerationTerminee = False
+        tempsFin = time.time()
+        delta_t = tempsFin - tempsDebut
+        ajustementEquation = (vitesseInitial - 0.2607)/-0.5704          # mise en equation, voir Excel
+        vitesse = -0.5704*(delta_t + ajustementEquation) + 0.2607        # mise en equation, voir Excel
+        #Gestion de la vitesse maximal
+        if vitesse < vitesseCible:
+            vitesse = vitesseCible
+            accelerationTerminee = True # la puissance cible est atteinte, on peut mettre fin à l'accélération
+        if vitesse < 0:
+            vitesse = 0
+        return tempsFin, vitesse, accelerationTerminee
 
