@@ -30,4 +30,4 @@ class RealAPI:
         cycleTime = currentTime-self.__lastTime
         self.__lastTime = currentTime
         if(cycleTime < 40000000):
-            time.nanosleep(40000000-cycleTime)
+            time.sleep((40000000-cycleTime)/1000000000)
