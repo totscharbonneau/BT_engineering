@@ -121,7 +121,7 @@ class StateMachine:
             self.adjustAngle()
             self.adjustSpeed()
             # self._api.move()
-            # self._api.cycleAction(i)
+            self._api.cycleAction(i)
     
     def adjustAngle(self):
         #realAngle = self._api.frontWheels.getRealAngle()
