@@ -11,10 +11,10 @@ class RealAPI:
     frontWheels = None
 
     def __init__(self):
-        self.ultrasonicAvoidance = Ultrasonic_Avoidance.Ultrasonic_Avoidance(20)
-        self.lineFollower = Line_Follower.Line_Follower()
-        self.backWheels = back_wheels.Back_Wheels(db='helper_files.config')
-        self.frontWheels = front_wheels.Front_Wheels(db='helper_files.config')
+        self.ultrasonicAvoidance = Ultrasonic_Avoidance(20)
+        self.lineFollower = Line_Follower()
+        self.backWheels = Back_Wheels(db='helper_files/config')
+        self.frontWheels = Front_Wheels(db='helper_files/config')
         picar.setup()
         calibrationReference = [200, 200, 200, 200, 200]
         self.lineFollower.references = calibrationReference
