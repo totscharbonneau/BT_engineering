@@ -12,9 +12,9 @@
 **********************************************************************
 '''
 
-import helper_files.TB6612
-import helper_files.PCA9685
-import helper_files.filedb
+import real_api.helper_files.TB6612
+import real_api.helper_files.PCA9685
+import real_api.helper_files.filedb
 
 class Back_Wheels(object):
 	''' Back wheels control class '''
