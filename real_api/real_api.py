@@ -29,5 +29,5 @@ class RealAPI:
         currentTime = time.perf_counter_ns()
         cycleTime = currentTime-self.__lastTime
         self.__lastTime = currentTime
-        if(cycleTime < 100000000):
-            time.sleep((100000000-cycleTime)/1000000000)
+        if(cycleTime < 41000000):
+            time.sleep((41000000-cycleTime)/1000000000)

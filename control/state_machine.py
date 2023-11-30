@@ -124,34 +124,19 @@ class StateMachine:
             self._api.cycleAction(i)
     
     def adjustAngle(self):
-        #realAngle = self._api.frontWheels.getRealAngle()
-        realAngle = self._lastAngle
-        if(self._targetAngle > realAngle+5):
+        if(self._targetAngle > self._lastAngle+5):
             self._lastAngle += 3
             self._api.frontWheels.turn(self._lastAngle)
-            #self._api.frontWheels.wanted_angle += 3
-            if(self._targetSpeed > 40):
-                self._targetSpeed = 40
-        elif(self._targetAngle < realAngle-5):
+        elif(self._targetAngle < self._lastAngle-5):
             self._lastAngle -= 3
             self._api.frontWheels.turn(self._lastAngle)
-            #self._api.frontWheels.wanted_angle -= 3
-            if(self._targetSpeed > 40):
-                self._targetSpeed = 40
         else:
             self._api.frontWheels.turn(self._targetAngle)
-            #self._api.frontWheels.wanted_angle = self._targetAngle
-            if(self._targetSpeed > 40):
-                self._targetSpeed = 40
 
     def adjustSpeed(self):
-        # realSpeed = self._api.backWheels.speed()
-        realSpeed = self._lastSpeed
-        #print(self._targetSpeed, realSpeed)
-        if(self._targetSpeed > realSpeed):
-            realSpeed += 5
-            self._api.backWheels.speed = realSpeed
-        elif(self._targetSpeed < realSpeed):
-            realSpeed -= 5
-            self._api.backWheels.speed = realSpeed
-        self._lastSpeed = realSpeed
+        if(self._targetSpeed > self._lastSpeed):
+            self._lastSpeed += 5
+            self._api.backWheels.speed = self._lastSpeed
+        elif(self._targetSpeed < self._lastSpeed):
+            self._lastSpeed -= 5
+            self._api.backWheels.speed = self._lastSpeed
