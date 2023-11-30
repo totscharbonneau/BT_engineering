@@ -41,9 +41,10 @@ EXIT = None
 class StateMachine:
     _api = None
     _stateMachine = None
-    _targetAngle = 0
+    _targetAngle = 90
     _targetSpeed = 0
-    _lastAngle = 90
+    _lastAngle = 90 
+    _lastSpeed = 0
 
     def __init__(self, api):
         self._api = api
@@ -114,34 +115,43 @@ class StateMachine:
 
     def loopStateMachine(self):
         stateobj = FollowLine(False, False)
-        for i in range(NUMBEROFCYCLES):
+        for i in range(100):
             print([i, stateobj])
             stateobj = StateMachine.doStateAction(self=self, state=stateobj)
             self.adjustAngle()
             self.adjustSpeed()
-            self._api.move()
-            self._api.cycleAction(i)
+            # self._api.move()
+            # self._api.cycleAction(i)
     
     def adjustAngle(self):
-        if(self._targetAngle > self._lastAngle+5):
+        #realAngle = self._api.frontWheels.getRealAngle()
+        realAngle = self._lastAngle
+        if(self._targetAngle > realAngle+5):
             self._lastAngle += 3
             self._api.frontWheels.turn(self._lastAngle)
-            if(self._targetSpeed > 15):
-                self._targetSpeed = 15
-        elif(self._targetAngle < self._lastAngle-5):
+            #self._api.frontWheels.wanted_angle += 3
+            if(self._targetSpeed > 40):
+                self._targetSpeed = 40
+        elif(self._targetAngle < realAngle-5):
             self._lastAngle -= 3
             self._api.frontWheels.turn(self._lastAngle)
-            if(self._targetSpeed > 15):
-                self._targetSpeed = 15
+            #self._api.frontWheels.wanted_angle -= 3
+            if(self._targetSpeed > 40):
+                self._targetSpeed = 40
         else:
-            self._lastAngle = self._targetAngle
-            self._api.frontWheels.turn(self._lastAngle)
-            if(self._targetSpeed > 15):
-                self._targetSpeed = 15
+            self._api.frontWheels.turn(self._targetAngle)
+            #self._api.frontWheels.wanted_angle = self._targetAngle
+            if(self._targetSpeed > 40):
+                self._targetSpeed = 40
 
     def adjustSpeed(self):
-        realSpeed = self._api.backWheels.getCurrentSpeed()
+        # realSpeed = self._api.backWheels.speed()
+        realSpeed = self._lastSpeed
+        #print(self._targetSpeed, realSpeed)
         if(self._targetSpeed > realSpeed):
-            self._api.backWheels.speed(realSpeed+1)
+            realSpeed += 5
+            self._api.backWheels.speed = realSpeed
         elif(self._targetSpeed < realSpeed):
-            self._api.backWheels.speed(realSpeed-2)
+            realSpeed -= 5
+            self._api.backWheels.speed = realSpeed
+        self._lastSpeed = realSpeed

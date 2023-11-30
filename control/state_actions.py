@@ -2,120 +2,97 @@ with open("control/line_follower_state_machine.py") as f:
     code = f.read()
     exec(code)
 
-class StateMachine:
-    _api = None
-    _stateMachine = None
-    _targetAngle = 90
-    _targetSpeed = 0
-    _lastAngle = 90 
-    _lastSpeed = 0
-
-    def __init__(self, api):
-        self._api = api
-        self._stateActions = StateActions()
-
-    def doStateAction(self, state : State):
-        match state:
-            case FollowLine(obstacle, finalT):
-                match (obstacle, finalT):
-                    case (False, False):
-                        nextObstacle, nextFinalT = StateActions.lineFollowerAction(self)
-                        return FollowLine(nextObstacle, nextFinalT)
-                    case (True, False):
-                        nextStopped = StateActions.stopAction(self)
-                        return Stop(nextStopped)
-                    case ((True | False), True):
-                        nextStopped, nextIsTest = StateActions.tStop(self)
-                        return TStop(nextStopped, nextIsTest)
-            case Stop(stopped):
-                match stopped:
-                    case False:
-                        nextStopped = StateActions.stopAction(self)
-                        return Stop(nextStopped)
-                    case True:
-                        nextDone = StateActions.backwardAction(self)
-                        return Backward(nextDone)
-            case Backward(done):
-                match done:
-                    case False:
-                        nextDone = StateActions.backwardAction(self)
-                        return Backward(nextDone)
-                    case True:
-                        nextDone = StateActions.goAroundAction(self)
-                        return GoAround(nextDone)
-            case GoAround(done):
-                match done:
-                    case False:
-                        nextDone = StateActions.goAroundAction(self)
-                        return GoAround(nextDone)
-                    case True:
-                        nextObstacle, nextFinalT = StateActions.lineFollowerAction(self)
-                        return FollowLine(nextObstacle, nextFinalT)
-            case TStop(stopped, isTest):
-                match (stopped, isTest):
-                    case (False, (True | False)):
-                        nextStopped, nextIsTest = StateActions.tStop(self)
-                        return TStop(nextStopped, nextIsTest)
-                    case (True, False):
-                        return EXIT
-                    case (True, True):
-                        nextDone = StateActions.finalBackward(self)
-                        return FinalBackward(nextDone)
-            case FinalBackward(done):
-                match (done):
-                    case False:
-                        nextDone = StateActions.finalBackward(self)
-                        return FinalBackward(nextDone)
-                    case True:
-                        nextStopped = StateActions.finalStop(self)
-                        return FinalStop(nextStopped)
-            case FinalStop(stopped):
-                match stopped:
-                    case False:
-                        nextStopped = StateActions.finalStop(self)
-                        return FinalStop(nextStopped)
-                    case True:
-                        return EXIT
-
-    def loopStateMachine(self):
-        stateobj = FollowLine(False, False)
-        for i in range(100):
-            print([i, stateobj])
-            stateobj = StateMachine.doStateAction(self=self, state=stateobj)
-            self.adjustAngle()
-            self.adjustSpeed()
-            # self._api.move()
-            # self._api.cycleAction(i)
+class StateActions:
+    lineFollowerState = RightAhead([0,0,1,0,0])
+    goAroundState = ['TURN_LEFT', 0]
     
-    def adjustAngle(self):
-        #realAngle = self._api.frontWheels.getRealAngle()
-        realAngle = self._lastAngle
-        if(self._targetAngle > realAngle+5):
-            self._lastAngle += 3
-            self._api.frontWheels.turn(self._lastAngle)
-            #self._api.frontWheels.wanted_angle += 3
-            if(self._targetSpeed > 40):
-                self._targetSpeed = 40
-        elif(self._targetAngle < realAngle-5):
-            self._lastAngle -= 3
-            self._api.frontWheels.turn(self._lastAngle)
-            #self._api.frontWheels.wanted_angle -= 3
-            if(self._targetSpeed > 40):
-                self._targetSpeed = 40
-        else:
-            self._api.frontWheels.turn(self._targetAngle)
-            #self._api.frontWheels.wanted_angle = self._targetAngle
-            if(self._targetSpeed > 40):
-                self._targetSpeed = 40
 
-    def adjustSpeed(self):
-        # realSpeed = self._api.backWheels.speed()
-        realSpeed = self._lastSpeed
-        #print(self._targetSpeed, realSpeed)
-        if(self._targetSpeed > realSpeed):
-            realSpeed += 5
-            self._api.backWheels.speed = realSpeed
-        elif(self._targetSpeed < realSpeed):
-            realSpeed -= 5
-            self._api.backWheels.speed = realSpeed
-        self._lastSpeed = realSpeed
+    def __init__(self):
+        lineFollowerState = RightAhead([0,0,1,0,0])
+
+    def lineFollowerAction(self):
+        self._stateActions.lineFollowerState = doLineFollowerStateAction(self, lineFollowerState=self._stateActions.lineFollowerState)
+        self._api.backWheels.forward()
+        self._targetSpeed = 20
+        distance = self._api.ultrasonicAvoidance.get_distance()
+        if((distance < 20) & (distance >= 0)):
+            obstacle = True
+        else:
+            obstacle = False
+        if(self._stateActions.lineFollowerState == None):
+            finalT = True
+        else:
+            finalT = False
+        return obstacle, finalT
+
+    def stopAction(self):
+        self._api.backWheels.forward()
+        self._targetSpeed = 5
+        if(self._api.ultrasonicAvoidance.less_than(10.5) == 1):
+            #self._api.backWheels.speed(0)
+            stopped = True
+        else:
+            stopped = False
+        return stopped
+
+    def backwardAction(self):
+        self._api.backWheels.backward()
+        distance = self._api.ultrasonicAvoidance.get_distance()
+        done = False
+        if(distance < 20):
+            self._targetSpeed = 20
+        elif(distance < 25):
+            self._targetSpeed = 5
+        else:
+            #self._api.backWheels.speed(0)
+            done = True
+        return done
+
+    def goAroundAction(self):
+        self._api.backWheels.forward()
+        self._targetSpeed = 25
+        done = False
+        if(self._stateActions.goAroundState[0] == 'TURN_LEFT'):
+            self._targetAngle = 65
+            self._stateActions.goAroundState[1] += 1
+            if(self._stateActions.goAroundState[1] == 30):
+                self._stateActions.goAroundState[0] = 'RIGHT_AHEAD'
+                self._stateActions.goAroundState[1] = 0
+        elif(self._stateActions.goAroundState[0] == 'RIGHT_AHEAD'):
+            self._targetAngle = 90
+            self._stateActions.goAroundState[1] += 1
+            if(self._stateActions.goAroundState[1] == 70):
+                self._stateActions.goAroundState[0] = 'TURN_RIGHT'
+                self._stateActions.goAroundState[1] = 0
+        elif(self._stateActions.goAroundState[0] == 'TURN_RIGHT'):
+            self._targetAngle = 105
+            self._stateActions.goAroundState[1] += 1
+            if(self._stateActions.goAroundState[1] == 60):
+                self._stateActions.goAroundState[0] = 'TURN_LEFT'
+                self._stateActions.goAroundState[1] = 0
+                done = True
+        return done
+        
+    def tStop(self):
+        self._api.backWheels.forward()
+        #self._api.backWheels.speed(0)
+        stopped = True
+        test = True
+        return stopped, test
+
+    def finalBackward(self):
+        self._api.backWheels.backward()
+        self._targetSpeed = 10
+        self._stateActions.lineFollowerState = doLineFollowerStateAction(self, lineFollowerState=self._stateActions.lineFollowerState)
+        if(self._stateActions.lineFollowerState == None):
+            #self._api.backWheels.speed(0)
+            done = True
+        else:
+            done = False
+        return done
+
+    def finalStop(self):
+        self._api.backWheels.forward()
+        #self._api.backWheels.speed(0)
+        stopped = True
+        return stopped
