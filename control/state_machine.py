@@ -43,7 +43,7 @@ class StateMachine:
     _stateMachine = None
     _targetAngle = 0
     _targetSpeed = 0
-    _lastAngle = 0 
+    _lastAngle = 90
 
     def __init__(self, api):
         self._api = api
