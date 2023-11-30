@@ -76,6 +76,8 @@ class StateActions:
         return done
         
     def tStop(self):
+        print(self._stateActions.tStopState)
+        print(self._stateActions.lineFollowerState)
         if(TEST):
             if(self._stateActions.tStopState[0] == 'SKIP_T'):
                 stopped = False
@@ -100,6 +102,8 @@ class StateActions:
         return stopped, TEST
 
     def finalBackward(self):
+        print(self._stateActions.finalbackwardState)
+        print(self._stateActions.lineFollowerState)
         self._api.backWheels.backward()
         if(self._stateActions.finalbackwardState[0] == 'SKIP_T'):
             done = False
@@ -120,6 +124,8 @@ class StateActions:
         return done
 
     def finalStop(self):
+        print(self._stateActions.finalStopState)
+        print(self._stateActions.lineFollowerState)
         self._api.backWheels.forward()
         self._targetSpeed = 50
         stopped = False
