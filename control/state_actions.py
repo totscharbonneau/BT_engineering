@@ -99,6 +99,7 @@ class StateActions:
         else:
             self._api.backWheels.forward()
             self._targetSpeed = 0
+            self._targetAngle = 90
             stopped = True
         return stopped, TEST
 
@@ -154,4 +155,5 @@ class StateActions:
                 stopped = True
                 self._stateActions.finalStopState[0] = 'SKIP_T'
                 self._stateActions.finalStopState[1] = 0
+        self._targetAngle = 90
         return stopped
