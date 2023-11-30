@@ -29,7 +29,7 @@ class StateActions:
         self._api.backWheels.forward()
         self._targetSpeed = 25
         if(self._api.ultrasonicAvoidance.less_than(10.5) == 1):
-            self._api.backWheels.speed(0)
+            self._targetSpeed = 0
             stopped = True
         else:
             stopped = False
@@ -44,7 +44,6 @@ class StateActions:
         elif(distance < 25):
             self._targetSpeed = 25
         else:
-            #self._api.backWheels.speed(0)
             done = True
         return done
 
@@ -75,9 +74,9 @@ class StateActions:
         
     def tStop(self):
         self._api.backWheels.forward()
-        self._api.backWheels.speed(0)
+        self._targetSpeed = 0
         stopped = True
-        test = True
+        test = TEST
         return stopped, test
 
     def finalBackward(self):
@@ -85,7 +84,6 @@ class StateActions:
         self._targetSpeed = 30
         self._stateActions.lineFollowerState = doLineFollowerStateAction(self, lineFollowerState=self._stateActions.lineFollowerState)
         if(self._stateActions.lineFollowerState == None):
-            #self._api.backWheels.speed(0)
             done = True
         else:
             done = False
@@ -93,6 +91,6 @@ class StateActions:
 
     def finalStop(self):
         self._api.backWheels.forward()
-        self._api.backWheels.speed(0)
+        self._targetSpeed = 0
         stopped = True
         return stopped
