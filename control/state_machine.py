@@ -43,6 +43,7 @@ class StateMachine:
     _stateMachine = None
     _targetAngle = 0
     _targetSpeed = 0
+    _lastAngle = 0 
 
     def __init__(self, api):
         self._api = api
@@ -122,17 +123,19 @@ class StateMachine:
             self._api.cycleAction(i)
     
     def adjustAngle(self):
-        realAngle = self._api.frontWheels.getRealAngle()
-        if(self._targetAngle > realAngle+5):
-            self._api.frontWheels.wanted_angle += 3
+        if(self._targetAngle > self._lastAngle+5):
+            self._lastAngle += 3
+            self._api.frontWheels.turn(self._lastAngle)
             if(self._targetSpeed > 15):
                 self._targetSpeed = 15
-        elif(self._targetAngle < realAngle-5):
-            self._api.frontWheels.wanted_angle -= 3
+        elif(self._targetAngle < self._lastAngle-5):
+            self._lastAngle -= 3
+            self._api.frontWheels.turn(self._lastAngle)
             if(self._targetSpeed > 15):
                 self._targetSpeed = 15
         else:
-            self._api.frontWheels.wanted_angle = self._targetAngle
+            self._lastAngle = self._targetAngle
+            self._api.frontWheels.turn(self._lastAngle)
             if(self._targetSpeed > 15):
                 self._targetSpeed = 15
 
