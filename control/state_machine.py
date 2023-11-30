@@ -115,7 +115,7 @@ class StateMachine:
 
     def loopStateMachine(self):
         stateobj = FollowLine(False, False)
-        for i in range(100):
+        for i in range(NUMBEROFCYCLES):
             print([i, stateobj])
             stateobj = StateMachine.doStateAction(self=self, state=stateobj)
             self.adjustAngle()
