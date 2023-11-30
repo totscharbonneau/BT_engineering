@@ -80,7 +80,7 @@ class StateActions:
             if(self._stateActions.tStopState[0] == 'SKIP_T'):
                 stopped = False
                 self._stateActions.tStopState[1] += 1
-                if(self._stateActions.tStopState[1] == 30):
+                if(self._stateActions.tStopState[1] == 120):
                     self._stateActions.tStopState[0] = 'SEARCH_T'
                     self._stateActions.tStopState[1] = 0
             elif(self._stateActions.tStopState[0] == 'SEARCH_T'):
@@ -104,7 +104,7 @@ class StateActions:
         if(self._stateActions.finalbackwardState[0] == 'SKIP_T'):
             done = False
             self._stateActions.finalbackwardState[1] += 1
-            if(self._stateActions.finalbackwardState[1] == 30):
+            if(self._stateActions.finalbackwardState[1] == 120):
                 self._stateActions.finalbackwardState[0] = 'SEARCH_T'
                 self._stateActions.finalbackwardState[1] = 0
         elif(self._stateActions.finalbackwardState[0] == 'SEARCH_T'):
@@ -122,26 +122,23 @@ class StateActions:
     def finalStop(self):
         self._api.backWheels.forward()
         self._targetSpeed = 50
+        stopped = False
         if(self._stateActions.finalStopState[0] == 'SKIP_T'):
-            stopped = False
             self._stateActions.finalStopState[1] += 1
-            if(self._stateActions.finalStopState[1] == 30):
+            if(self._stateActions.finalStopState[1] == 120):
                 self._stateActions.finalStopState[0] = 'SEARCH_T'
                 self._stateActions.finalStopState[1] = 0
         elif(self._stateActions.finalStopState[0] == 'SEARCH_T'):
-            stopped = False
             self._stateActions.lineFollowerState = doLineFollowerStateAction(self, lineFollowerState=self._stateActions.lineFollowerState)
             if(self._stateActions.lineFollowerState == None):
                 self._stateActions.finalStopState[0] = 'SKIP_T2'
                 self._stateActions.finalStopState[1] = 0
         elif(self._stateActions.finalStopState[0] == 'SKIP_T2'):
-            stopped = False
             self._stateActions.finalStopState[1] += 1
-            if(self._stateActions.finalStopState[1] == 30):
+            if(self._stateActions.finalStopState[1] == 120):
                 self._stateActions.finalStopState[0] = 'FINAL_LINE'
                 self._stateActions.finalStopState[1] = 0
-        elif(self._stateActions.finalStopState[0] == 'SEARCH_T'):
-            stopped = False
+        elif(self._stateActions.finalStopState[0] == 'FINAL_LINE'):
             self._stateActions.lineFollowerState = doLineFollowerStateAction(self, lineFollowerState=self._stateActions.lineFollowerState)
             if(self._stateActions.lineFollowerState == None):
                 stopped = True
