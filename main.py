@@ -13,7 +13,7 @@ if(SIMULATION):
         exec(code)
     api = SimAPI(RESET, NUMBEROFCYCLES)
 else:
-    import real_api.real_api
+    from real_api.real_api import *
     api = RealAPI()
 
 stateMachine = StateMachine(api)

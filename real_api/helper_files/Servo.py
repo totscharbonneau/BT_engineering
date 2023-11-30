@@ -12,7 +12,7 @@
 **********************************************************************
 '''
 
-import real_api.helper_files.PCA9685
+from real_api.helper_files.PCA9685 import *
 
 class Servo(object):
 	'''Servo driver class'''

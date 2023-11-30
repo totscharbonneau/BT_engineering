@@ -1,8 +1,8 @@
-import real_api.back_wheels
-import real_api.front_wheels
-import real_api.Line_Follower
-import real_api.Ultrasonic_Avoidance
-import real_api.picar
+from real_api.back_wheels import *
+from real_api.front_wheels import *
+from real_api.Line_Follower import *
+from real_api.Ultrasonic_Avoidance import *
+from real_api.picar import *
 
 class RealAPI:
     ultrasonicAvoidance = None
