@@ -125,6 +125,7 @@ class StateMachine:
             self.adjustSpeed()
             # self._api.move()
             self._api.cycleAction(i)
+        self._api.back_wheels.speed = 0
     
     def adjustAngle(self):
         if(self._targetAngle > self._lastAngle+9):
