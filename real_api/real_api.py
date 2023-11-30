@@ -19,7 +19,7 @@ class RealAPI:
         self.backWheels = Back_Wheels(db='helper_files/config')
         self.frontWheels = Front_Wheels(db='helper_files/config')
         picar.setup()
-        calibrationReference = [200, 200, 200, 200, 200]
+        calibrationReference = [150, 150, 150, 150, 150]
         self.lineFollower.references = calibrationReference
         self.frontWheels.ready()
         self.backWheels.ready()
