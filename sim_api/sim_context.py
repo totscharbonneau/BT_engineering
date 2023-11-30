@@ -13,3 +13,4 @@ class SimContext:
         bpy.context.scene.rigidbody_world.time_scale = 1
         bpy.context.scene.rigidbody_world.substeps_per_frame = 70
         bpy.context.scene.frame_end = numberOfCycles
+        bpy.context.scene.rigidbody_world.point_cache.frame_end = numberOfCycles

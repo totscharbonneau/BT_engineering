@@ -53,19 +53,19 @@ class StateActions:
         self._targetSpeed = 25
         done = False
         if(self._stateActions.goAroundState[0] == 'TURN_LEFT'):
-            self._targetAngle = -25
+            self._targetAngle = 65
             self._stateActions.goAroundState[1] += 1
             if(self._stateActions.goAroundState[1] == 30):
                 self._stateActions.goAroundState[0] = 'RIGHT_AHEAD'
                 self._stateActions.goAroundState[1] = 0
         elif(self._stateActions.goAroundState[0] == 'RIGHT_AHEAD'):
-            self._targetAngle = 0
+            self._targetAngle = 90
             self._stateActions.goAroundState[1] += 1
             if(self._stateActions.goAroundState[1] == 70):
                 self._stateActions.goAroundState[0] = 'TURN_RIGHT'
                 self._stateActions.goAroundState[1] = 0
         elif(self._stateActions.goAroundState[0] == 'TURN_RIGHT'):
-            self._targetAngle = 15
+            self._targetAngle = 105
             self._stateActions.goAroundState[1] += 1
             if(self._stateActions.goAroundState[1] == 60):
                 self._stateActions.goAroundState[0] = 'TURN_LEFT'
