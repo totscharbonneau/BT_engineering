@@ -124,11 +124,11 @@ class StateMachine:
             self._api.cycleAction(i)
     
     def adjustAngle(self):
-        if(self._targetAngle > self._lastAngle+5):
-            self._lastAngle += 3
+        if(self._targetAngle > self._lastAngle+9):
+            self._lastAngle += 6
             self._api.frontWheels.turn(self._lastAngle)
-        elif(self._targetAngle < self._lastAngle-5):
-            self._lastAngle -= 3
+        elif(self._targetAngle < self._lastAngle-9):
+            self._lastAngle -= 6
             self._api.frontWheels.turn(self._lastAngle)
         else:
             self._api.frontWheels.turn(self._targetAngle)
