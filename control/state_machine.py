@@ -135,8 +135,8 @@ class StateMachine:
 
     def adjustSpeed(self):
         if(self._targetSpeed > self._lastSpeed):
-            self._lastSpeed += 5
+            self._lastSpeed += 3
             self._api.backWheels.speed = self._lastSpeed
         elif(self._targetSpeed < self._lastSpeed):
-            self._lastSpeed -= 5
+            self._lastSpeed -= 3
             self._api.backWheels.speed = self._lastSpeed
