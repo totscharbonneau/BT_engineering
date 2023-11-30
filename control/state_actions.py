@@ -60,11 +60,11 @@ class StateActions:
         elif(self._stateActions.goAroundState[0] == 'RIGHT_AHEAD'):
             self._targetAngle = 90
             self._stateActions.goAroundState[1] += 1
-            if(self._stateActions.goAroundState[1] == 30):
+            if(self._stateActions.goAroundState[1] == 50):
                 self._stateActions.goAroundState[0] = 'TURN_RIGHT'
                 self._stateActions.goAroundState[1] = 0
         elif(self._stateActions.goAroundState[0] == 'TURN_RIGHT'):
-            self._targetAngle = 105
+            self._targetAngle = 115
             self._stateActions.goAroundState[1] += 1
             if(self._stateActions.goAroundState[1] == 60):
                 self._stateActions.goAroundState[0] = 'TURN_LEFT'
