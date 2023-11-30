@@ -28,5 +28,5 @@ class RealAPI:
     def cycleAction(self, cycle):
         currentTime = time.perf_counter_ns()
         cycleTime = currentTime-self.__lastTime
-        if(cycleTime < 5000000):
-            time.nanosleep(5000000-cycleTime)
+        if(cycleTime < 40000000):
+            time.nanosleep(40000000-cycleTime)
