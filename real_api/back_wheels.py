@@ -63,16 +63,16 @@ class Back_Wheels(object):
 			print(self._DEBUG_INFO,message)
 
 	def forward(self):
-		''' Move both wheels forward '''
-		self.left_wheel.forward()
-		self.right_wheel.forward()
-		self._debug_('Running forward')
-
-	def backward(self):
 		''' Move both wheels backward '''
 		self.left_wheel.backward()
 		self.right_wheel.backward()
 		self._debug_('Running backward')
+
+	def backward(self):
+		''' Move both wheels forward '''
+		self.left_wheel.forward()
+		self.right_wheel.forward()
+		self._debug_('Running forward')
 
 	def stop(self):
 		''' Stop both wheels '''
