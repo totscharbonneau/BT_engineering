@@ -95,7 +95,7 @@ class StateActions:
                     self._stateActions.tStopState[0] = 'SKIP_T'
                     self._stateActions.tStopState[1] = 0
                 else:
-                    done = False
+                    stopped = False
         else:
             self._api.backWheels.forward()
             self._targetSpeed = 0
