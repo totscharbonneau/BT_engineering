@@ -63,8 +63,7 @@ class SimFrontWheels:
         turningpoint = bpy.context.active_object
         turningpoint.name = "turningpoint"
         turningpoint.parent = self.__picar
-        bpy.ops.view3d.snap_cursor_to_active(get_contexteoverwrite())
-        bpy.context.scene.tool_settings.transform_pivot_point = 'CURSOR'
+        bpy.context.scene.tool_settings.transform_pivot_point = 'ACTIVE_ELEMENT'
         self.__picar.select_set(True)
 
         rotationrad = -numpy.sign(self.__real_angle)*self.__simBackWheels.getDirection()*(self.__simBackWheels.getCurrentSpeed()*1/100/24)/radius
@@ -73,7 +72,16 @@ class SimFrontWheels:
 
         #clean up
         bpy.context.scene.tool_settings.transform_pivot_point = 'BOUNDING_BOX_CENTER'
-        bpy.context.scene.cursor.location = (0,0,0)
         bpy.ops.object.select_all(action='DESELECT')
         bpy.data.objects['turningpoint'].select_set(True)
         bpy.ops.object.delete()
+
+    def get_contexteoverwrite(self):
+        for i, area in enumerate(bpy.context.screen.areas):
+            if area.type == 'VIEW_3D':
+                view3d = bpy.context.screen.areas[i]
+                context_override = {'window': bpy.context.window, 
+                        'screen': bpy.context.screen, 
+                        'area' : view3d}
+                return context_override
+        return None

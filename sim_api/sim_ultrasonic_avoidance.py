@@ -1,20 +1,14 @@
-import bpy, time
+import bpy
 
-class SimUltrasonicAvoidance():
-    _picar = None
-    _distanceSensor = None
+class SimUltrasonicAvoidance:
     def __init__(self, parent):
-        self._picar = parent._objects["picar"]
-        self._distanceSensor = parent._objects["distanceSensor"]
-
+        self._parent = parent
 
     def distance(self):
-        timeout = 0.05
-        time.sleep(timeout)
         scene = bpy.context.scene
         deps = bpy.context.view_layer.depsgraph
-        sensorLocation = self._distanceSensor.matrix_world.translation
-        sensorRotation = self._picar.rotation_euler
+        sensorLocation = self._parent._objects["distanceSensor"].matrix_world.translation
+        sensorRotation = self._parent._objects["picar"].rotation_euler
         rayResult = scene.ray_cast(deps, sensorLocation, mathutils.Euler([sensorRotation[0], sensorRotation[1]+90, sensorRotation[2]]))
         if rayResult[0] == False:
             return -1

@@ -20,7 +20,9 @@ class SimLineFollower:
     
     def read_raw(self):
         output = []
-        for i, sensorMesh in enumerate(self.__sensorsMesh):
+        for i in range(5):
+            sensorMesh = bmesh.new()
+            sensorMesh.from_mesh(self.__sensors[i].data)
             sensorMesh.transform(self.__sensors[i].matrix_world)
             sensorTree = mathutils.bvhtree.BVHTree.FromBMesh(sensorMesh)
             overlap = sensorTree.overlap(self.__trackTree)

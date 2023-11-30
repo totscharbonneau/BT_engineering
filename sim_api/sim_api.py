@@ -36,7 +36,6 @@ objNames = {
     "lineSensor3": "Sensor_3",
     "lineSensor4": "Sensor_4",
     "line": "plane_obj1",
-    "obstacle": "obstacle_obj1",
     "wheel0": "wheel_0",
     "wheel1": "wheel_1",
     "wheel2": "wheel_2",
@@ -52,21 +51,32 @@ class SimAPI:
     backWheels = None
     frontWheels = None
 
-    def __init__(self, isResetNeeded):
+    def __init__(self, isResetNeeded, numberOfCycles):
         if(isResetNeeded):
-            SimContext.setBlenderEnv()
-            ShapeFactory.picarGen(objNames["picar"], [0, -picar_length/2 + 4.12/100, 0])
-            ShapeFactory.marbleGen(objNames["marble"], [0, picar_length/2 - 4.7625/100, picar_height+0.015])
-            # TrackFactory.track1(objNames["line"], objNames["obstacle"], (0,0.575,0), (0,0.625,0))
-            # TrackFactory.track2(objNames["line"], objNames["obstacle"], (0,0.575,0), (0,0,-10))
-            TrackFactory.track3(objNames["line"], objNames["obstacle"], (0,0.575,0), (0,0,-10))
-        self._objects = dict()
-        for key, value in objNames.items():
-            self._objects[key] = bpy.data.objects[value]
+            SimContext.setBlenderEnv(numberOfCycles)
+            ShapeFactory.picarGen(objNames["picar"], (0, -picar_length/2 + 4.12/100, 0))
+            ShapeFactory.marbleGen(objNames["marble"], (0, picar_length/2 - 4.7625/100, picar_height+0.015))
+            #TrackFactory.track1(objNames["line"], "obstacle", (0,0.575,0), (0,0.625,0))
+            TrackFactory.track2(objNames["line"], (0,0.575,0))
+            #TrackFactory.track3(objNames["line"], (0,0.575,0))
+            self._objects = dict()
+            for key, value in objNames.items():
+                self._objects[key] = bpy.data.objects[value]
+            self.backWheels = SimBackWheels(parent=self)
+            self.frontWheels = SimFrontWheels(parent=self, simBackWheels=self.backWheels)
+        else:
+            self._objects = dict()
+            for key, value in objNames.items():
+                self._objects[key] = bpy.data.objects[value]
+            self._objects["picar"].location = (0, -picar_length/2 + 4.12/100, 0)
+            self._objects["marble"].location = (0, picar_length/2 - 4.7625/100, picar_height+0.015)
+            self.backWheels = SimBackWheels(parent=self)
+            self.frontWheels = SimFrontWheels(parent=self, simBackWheels=self.backWheels)
+            self.frontWheels.__real_angle = 0
+            self.frontWheels.update()
         self.ultrasonicAvoidance = SimUltrasonicAvoidance(parent=self)
         self.lineFollower = SimLineFollower(parent=self)
-        self.backWheels = SimBackWheels(parent=self)
-        self.frontWheels = SimFrontWheels(parent=self, simBackWheels=self.backWheels)
+
 
     def move(self):
         self.frontWheels.update()
@@ -83,3 +93,6 @@ class SimAPI:
         bpy.ops.anim.keyframe_insert(type='LocRotScale')
         for obj in bpy.data.objects:
             obj.select_set(False)
+
+    def cycleAction(self, cycle):
+        bpy.context.scene.frame_set(cycle)
