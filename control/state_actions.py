@@ -23,6 +23,7 @@ class StateActions:
         else:
             obstacle = False
         if(self._stateActions.lineFollowerState == None):
+            lineFollowerState = RightAhead([0,0,1,0,0])
             finalT = True
         else:
             finalT = False
@@ -114,6 +115,7 @@ class StateActions:
         elif(self._stateActions.finalbackwardState[0] == 'SEARCH_T'):
             self._stateActions.lineFollowerState = doLineFollowerStateAction(self, lineFollowerState=self._stateActions.lineFollowerState)
             if(self._stateActions.lineFollowerState == None):
+                lineFollowerState = RightAhead([0,0,1,0,0])
                 done = True
                 self._stateActions.finalbackwardState[0] = 'SKIP_T'
                 self._stateActions.finalbackwardState[1] = 0
@@ -137,6 +139,7 @@ class StateActions:
         elif(self._stateActions.finalStopState[0] == 'SEARCH_T'):
             self._stateActions.lineFollowerState = doLineFollowerStateAction(self, lineFollowerState=self._stateActions.lineFollowerState)
             if(self._stateActions.lineFollowerState == None):
+                lineFollowerState = RightAhead([0,0,1,0,0])
                 self._stateActions.finalStopState[0] = 'SKIP_T2'
                 self._stateActions.finalStopState[1] = 0
         elif(self._stateActions.finalStopState[0] == 'SKIP_T2'):
@@ -147,6 +150,7 @@ class StateActions:
         elif(self._stateActions.finalStopState[0] == 'FINAL_LINE'):
             self._stateActions.lineFollowerState = doLineFollowerStateAction(self, lineFollowerState=self._stateActions.lineFollowerState)
             if(self._stateActions.lineFollowerState == None):
+                lineFollowerState = RightAhead([0,0,1,0,0])
                 stopped = True
                 self._stateActions.finalStopState[0] = 'SKIP_T'
                 self._stateActions.finalStopState[1] = 0
