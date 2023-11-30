@@ -1,9 +1,5 @@
 import sys
-from real_api.front_wheels import *
-from real_api.back_wheels import *
-from real_api.helper_files.Servo import *
-from real_api.helper_files.PCF8591 import *
-from real_api.helper_files.PCA9685 import *
+from real_api.helper_files import PCA9685
 
 class picar:
     def setup():

@@ -11,8 +11,8 @@
 *               Cavon    2016-11-04    fix for submodules
 **********************************************************************
 '''
-from real_api.helper_files.Servo import *
-from real_api.helper_files.filedb import *
+from real_api.helper_files import Servo
+from real_api.helper_files import filedb
 
 class Front_Wheels(object):
 	''' Front wheels control class '''
