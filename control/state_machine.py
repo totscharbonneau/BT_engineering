@@ -45,12 +45,14 @@ class StateMachine:
     _targetSpeed = 0
     _lastAngle = 90 
     _lastSpeed = 0
+    _forward = False
+    _backward = False
 
     def __init__(self, api):
         self._api = api
         self._stateActions = StateActions()
         self.mouvementControl = MouvementControl()
-
+    
     def doStateAction(self, state : State):
         match state:
             case FollowLine(obstacle, finalT):
@@ -143,6 +145,16 @@ class StateMachine:
         self._api.backWheels.speed(self.mouvementControl.ajusterVitesse(self._targetSpeed))
 
         """if(self._targetSpeed > self._lastSpeed):
+        if(self._forward & self._backward):
+            self._targetSpeed = 15
+            if(self._lastSpeed <= 15):
+                self._forward = False
+                self._backward = False
+        elif(self._forward and not self._backward):
+            self._api.backWheels.forward()
+        elif(not self._forward and self._backward):
+            self._api.backWheels.backward()
+        if(self._targetSpeed > self._lastSpeed):
             self._lastSpeed += 3
             self._api.backWheels.speed = self._lastSpeed
         elif(self._targetSpeed < self._lastSpeed):
