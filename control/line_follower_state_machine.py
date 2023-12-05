@@ -49,7 +49,7 @@ class VeryStrongRight:
     lineFollowerData: [int, int, int, int, int]
 
 @dataclass
-class lostRight:
+class hardRight:
     lineFollowerData: [int, int, int, int, int]
 
 @dataclass
@@ -194,4 +194,4 @@ def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
             if nextLineFollowerData[2] == 0:
                 return VeryStrongRight(nextLineFollowerData)
             else:
-                return StrongRight(self)
+                return StrongRight(nextLineFollowerData)
