@@ -15,8 +15,6 @@ class StateActions:
 
     def lineFollowerAction(self):
         self._stateActions.lineFollowerState = doLineFollowerStateAction(self, lineFollowerState=self._stateActions.lineFollowerState)
-        self._api.backWheels.forward()
-        self._targetSpeed = 50
         distance = self._api.ultrasonicAvoidance.get_distance()
         if((distance < 20) & (distance >= 0)):
             obstacle = True
@@ -156,3 +154,16 @@ class StateActions:
                 self._stateActions.finalStopState[1] = 0
         self._targetAngle = 90
         return stopped
+
+    def goBehind(self):
+            self._api.backWheels.backward()
+            self._targetSpeed = 35
+            done = False
+            if(done == False):
+                self._targetAngle = 0
+                self._stateActions.goAroundState[1] += 1
+                if(self._stateActions.goAroundState[1] == 150):
+                    self._targetSpeed = 0
+                    self._stateActions.goAroundState[1] = 0
+                    done = True
+            return done
