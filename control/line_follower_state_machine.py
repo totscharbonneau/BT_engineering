@@ -191,9 +191,7 @@ def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
                 return EXIT
         case VeryStrongRight(lineFollowerData):
             nextLineFollowerData, cycle = LineFollowerActions.VeryStrongRight(self)
-            if cycle < 100:
+            if nextLineFollowerData[2] == 0:
                 return VeryStrongRight(nextLineFollowerData)
             else:
-                nextState = lineFollowerCommonChoice(self, lineFollowerData)
-                if(nextState != None):
-                    return nextState
+                return StrongRight(self)
