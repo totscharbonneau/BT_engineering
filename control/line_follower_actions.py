@@ -26,11 +26,11 @@ class LineFollowerActions:
     def StrongLeft(self):
         self._forward = True
         self._targetSpeed = 50
-        self._targetAngle = 55
+        self._targetAngle = 45
         return self._api.lineFollower.read_digital()
 
     def VeryStrongLeft(self):
-        self._api.backWheels.backwards()
+        self._backward = True
         self._targetSpeed = 50
         self._targetAngle = 135
         return self._api.lineFollower.read_digital()
@@ -56,7 +56,7 @@ class LineFollowerActions:
     def StrongRight(self):
         self._forward = True
         self._targetSpeed = 50
-        self._targetAngle = 125
+        self._targetAngle = 135
         return self._api.lineFollower.read_digital()
 
     def VeryStrongRight(self):
