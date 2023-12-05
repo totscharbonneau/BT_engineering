@@ -43,12 +43,13 @@ class Line_Follower(object):
 		lt = self.read_analog()
 		digital_list = []
 		for i in range(0, 5):
-			if lt[i] > self._references[i]:
+			if lt[i] >= self._references[i]:
 				digital_list.append(0)
 			elif lt[i] < self._references[i]:
 				digital_list.append(1)
 			else:
 				digital_list.append(-1)
+		print(digital_list)
 		return digital_list
 
 	def get_average(self, mount):

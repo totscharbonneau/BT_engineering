@@ -56,19 +56,23 @@ class StateActions:
         self._targetSpeed = 60
         done = False
         if(self._stateActions.goAroundState[0] == 'TURN_LEFT'):
-            self._targetAngle = 50 # 65
+            self._targetAngle = 65 # 65
             self._stateActions.goAroundState[1] += 1
-            if(self._stateActions.goAroundState[1] == 60):
+            if(self._stateActions.goAroundState[1] == 67):
                 self._stateActions.goAroundState[0] = 'RIGHT_AHEAD'
                 self._stateActions.goAroundState[1] = 0
         elif(self._stateActions.goAroundState[0] == 'RIGHT_AHEAD'):
-            self._targetAngle = 110 #90
+            self._targetAngle = 90 #90
             self._stateActions.goAroundState[1] += 1
-            if(self._stateActions.goAroundState[1] == 100): #50
+            if(self._stateActions.goAroundState[1] == 50): #50
                 self._stateActions.goAroundState[0] = 'TURN_RIGHT'
                 self._stateActions.goAroundState[1] = 0
         elif(self._stateActions.goAroundState[0] == 'TURN_RIGHT'):
+<<<<<<< Updated upstream
             self._targetAngle = 90 #115
+=======
+            self._targetAngle = 115 #115
+>>>>>>> Stashed changes
             self._stateActions.goAroundState[1] += 1
             if(self._stateActions.goAroundState[1] == 5):
                 self._stateActions.goAroundState[0] = 'TURN_LEFT'
@@ -77,9 +81,14 @@ class StateActions:
         return done
         
     def tStop(self):
+<<<<<<< Updated upstream
         #print((self._stateActions.tStopState, self._stateActions.lineFollowerState))
         if(TEST):
             self._targetSpeed = 45
+=======
+        print((self._stateActions.tStopState, self._stateActions.lineFollowerState))
+        if(TEST):
+>>>>>>> Stashed changes
             if(self._stateActions.tStopState[0] == 'SKIP_T'):
                 stopped = False
                 self._stateActions.tStopState[1] += 1
@@ -105,7 +114,11 @@ class StateActions:
         return stopped, TEST
 
     def finalBackward(self):
+<<<<<<< Updated upstream
         #print((self._stateActions.finalbackwardState, self._stateActions.lineFollowerState))
+=======
+        print((self._stateActions.finalbackwardState, self._stateActions.lineFollowerState))
+>>>>>>> Stashed changes
         self._api.backWheels.backward()
         if(self._stateActions.finalbackwardState[0] == 'SKIP_T'):
             done = False
@@ -127,9 +140,15 @@ class StateActions:
         return done
 
     def finalStop(self):
+<<<<<<< Updated upstream
         #print((self._stateActions.finalStopState, self._stateActions.lineFollowerState))
         self._api.backWheels.forward()
         self._targetSpeed = 45
+=======
+        print((self._stateActions.finalStopState, self._stateActions.lineFollowerState))
+        self._api.backWheels.forward()
+        self._targetSpeed = 50
+>>>>>>> Stashed changes
         stopped = False
         if(self._stateActions.finalStopState[0] == 'SKIP_T'):
             self._stateActions.finalStopState[1] += 1

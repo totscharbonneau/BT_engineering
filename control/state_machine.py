@@ -128,11 +128,11 @@ class StateMachine:
         self._api.backWheels.speed = 0
     
     def adjustAngle(self):
-        if(self._targetAngle > self._lastAngle+9):
-            self._lastAngle += 6
+        if(self._targetAngle > self._lastAngle+20):
+            self._lastAngle += 15
             self._api.frontWheels.turn(self._lastAngle)
-        elif(self._targetAngle < self._lastAngle-9):
-            self._lastAngle -= 6
+        elif(self._targetAngle < self._lastAngle-20):
+            self._lastAngle -= 15
             self._api.frontWheels.turn(self._lastAngle)
         else:
             self._api.frontWheels.turn(self._targetAngle)

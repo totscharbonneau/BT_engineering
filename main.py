@@ -1,7 +1,7 @@
 SIMULATION = False
 RESET = True
-NUMBEROFCYCLES = 500
-TEST = True
+NUMBEROFCYCLES = 2000
+TEST = False
 
 with open("control/state_machine.py") as f:
     code = f.read()
