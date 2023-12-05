@@ -63,7 +63,9 @@ class MouvementControl:
             else:
                 self.niveauDeVirage = -4
         self.virage()"""
-        return self.angleRoue + deltaAngle/5
+        print(angleCible)
+        self.angleRoue += deltaAngle/5
+        return self.angleRoue
 
     def reculerDistantce(self, puissanceMoteurCible, distance):
         if self.reculer == "null":
