@@ -28,7 +28,7 @@ class StateActions:
         return obstacle, finalT
 
     def stopAction(self):
-        self._api.backWheels.forward()
+        self._forward = True
         self._targetSpeed = 25
         if(self._api.ultrasonicAvoidance.less_than(10.5) == 1):
             self._targetSpeed = 0
@@ -38,7 +38,7 @@ class StateActions:
         return stopped
 
     def backwardAction(self):
-        self._api.backWheels.backward()
+        self._backward = True
         distance = self._api.ultrasonicAvoidance.get_distance()
         done = False
         if(distance < 20):
@@ -50,7 +50,7 @@ class StateActions:
         return done
 
     def goAroundAction(self):
-        self._api.backWheels.forward()
+        self._forward = True
         self._targetSpeed = 60
         done = False
         if(self._stateActions.goAroundState[0] == 'TURN_LEFT'):
@@ -89,14 +89,14 @@ class StateActions:
                 if(self._stateActions.lineFollowerState == None):
                     self._stateActions.lineFollowerState = RightAhead([0,0,1,0,0])
                     stopped = True
-                    self._api.backWheels.forward()
+                    self._forward = True
                     self._targetSpeed = 0
                     self._stateActions.tStopState[0] = 'SKIP_T'
                     self._stateActions.tStopState[1] = 0
                 else:
                     stopped = False
         else:
-            self._api.backWheels.forward()
+            self._forward = True
             self._targetSpeed = 0
             self._targetAngle = 90
             stopped = True
@@ -104,7 +104,7 @@ class StateActions:
 
     def finalBackward(self):
         #print((self._stateActions.finalbackwardState, self._stateActions.lineFollowerState))
-        self._api.backWheels.backward()
+        self._backward = True
         if(self._stateActions.finalbackwardState[0] == 'SKIP_T'):
             done = False
             self._stateActions.finalbackwardState[1] += 1
@@ -126,7 +126,7 @@ class StateActions:
 
     def finalStop(self):
         #print((self._stateActions.finalStopState, self._stateActions.lineFollowerState))
-        self._api.backWheels.forward()
+        self._forward = True
         self._targetSpeed = 45
         stopped = False
         if(self._stateActions.finalStopState[0] == 'SKIP_T'):
@@ -156,7 +156,7 @@ class StateActions:
         return stopped
 
     def goBehind(self):
-            self._api.backWheels.backward()
+            self._backward = True
             self._targetSpeed = 35
             done = False
             if(done == False):
