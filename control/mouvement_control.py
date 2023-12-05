@@ -21,6 +21,7 @@ class MouvementControl:
     acceleration = "null"
     deceleration = "null"
     reculer = "null"
+
     def __init__ (self):
         self.angleRoue = 90
 
@@ -87,10 +88,10 @@ class MouvementControl:
 
     ##### DEPLACEMENT #####
     def calculDistanceParcourue(self):
-        self.vitesse = 0.0029 * self.puissanceMoteurInitial - 0.0245
+        self.vitesse = 0.0029 * self.puissanceMoteurPiCar - 0.0245
         self.distanceParcourue += self.delta_t * self.vitesse
         self.deplacementTotal += self.delta_t * self.vitesse
-        return
+        return self.deplacementTotal
 
     ##### ACCELERATION #####
     def accelerationInit(self):
@@ -142,38 +143,6 @@ class MouvementControl:
             puissanceMoteur = 0
         self.puissanceMoteurPiCar = puissanceMoteur
         return
-
-    # POUR SIMULATION
-    def accelerationSimulation(self):
-        self.tempsNouvelleAction = time.time()
-        self.delta_t = self.tempsNouvelleAction - self.tempsDerniereAction
-        ajustementEquation = (self.vitesse - 0.0041) / -0.5704  # mise en equation, voir Excel
-        vitesse = 0.5704 * (self.delta_t + ajustementEquation) + 0.004  # mise en equation, voir Excel
-        # Gestion de la vitesse maximal
-        if vitesse > self.vitesseCible:
-            vitesse = self.vitesseCible
-            self.acceleration = "null"  # la puissance cible est atteinte, on peut mettre fin à l'accélération
-        if vitesse < 0:
-            vitesse = 0
-        self.vitesse = vitesse
-        return
-
-    # POUR SIMULATION
-    def decelerationSimulation(self):
-        self.tempsNouvelleAction = time.time()
-        self.delta_t = self.tempsNouvelleAction - self.tempsDerniereAction
-        ajustementEquation = (self.vitesse - 0.2607) / -0.5704  # mise en equation, voir Excel
-        vitesse = -0.5704 * (self.delta_t + ajustementEquation) + 0.2607  # mise en equation, voir Excel
-        # Gestion de la vitesse maximal
-        if vitesse < self.vitesseCible:
-            vitesse = self.vitesseCible
-            self.deceleration = "null"  # la puissance cible est atteinte, on peut mettre fin à l'accélération
-        if vitesse < 0:
-            vitesse = 0
-        self.vitesse = vitesse
-        return
-
-    ##### FIN ACCELERATION #####
 
     ##### VIRAGE #####
     def virage(self):
