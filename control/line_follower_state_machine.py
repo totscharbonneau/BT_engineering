@@ -132,7 +132,7 @@ def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
             if(nextState != None):
                 return nextState
             if((lineFollowerData == [0,0,0,0,0]) | (lineFollowerData == [0,1,1,1,0])):
-                nextLineFollowerData = LineFollowerActions.VeryStrongLeft(self)
+                nextLineFollowerData = LineFollowerActions.VeryStrongLeft(self, True)
                 return VeryStrongLeft(nextLineFollowerData)
             else:
                 return EXIT
@@ -177,7 +177,7 @@ def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
             if(nextState != None):
                 return nextState
             if((lineFollowerData == [0,0,0,0,0]) | (lineFollowerData == [0,1,1,1,0])):
-                nextLineFollowerData = LineFollowerActions.VeryStrongRight(self)
+                nextLineFollowerData = LineFollowerActions.VeryStrongRight(self, True)
                 return VeryStrongRight(nextLineFollowerData)
             else:
                 return EXIT
