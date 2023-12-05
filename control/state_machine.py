@@ -142,8 +142,11 @@ class StateMachine:
             self._api.frontWheels.turn(self._targetAngle)"""
 
     def adjustSpeed(self):
+        if self._api.backWheels.speed < 0:
+            self._api.backWheels.backward()
+        else:
+            self._api.backWheels.forward()
         self._api.backWheels.speed = int(self.mouvementControl.ajusterVitesse(self._targetSpeed))
-
         """if(self._targetSpeed > self._lastSpeed):
         if(self._forward & self._backward):
             self._targetSpeed = 15
