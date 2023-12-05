@@ -8,7 +8,7 @@ class StateActions:
     finalbackwardState = ['SKIP_T', 0]
     tStopState = ['SKIP_T', 0]
     finalStopState = ['SKIP_T', 0]
-    
+    cycleSinceLostLine = 0 
 
     def __init__(self):
         lineFollowerState = RightAhead([0,0,1,0,0])

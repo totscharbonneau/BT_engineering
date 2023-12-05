@@ -177,12 +177,19 @@ def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
             else:
                 return EXIT
         case StrongRight(lineFollowerData):
+            
             nextState = lineFollowerCommonChoice(self, lineFollowerData)
             if(nextState != None):
                 return nextState
             if((lineFollowerData == [0,0,0,0,0]) | (lineFollowerData == [0,1,1,1,0])):
-                nextLineFollowerData = LineFollowerActions.VeryStrongRight(self, True)
-                return VeryStrongRight(nextLineFollowerData)
+                if self.cycleSinceLostLine < 15:
+                    self.self.cycleSinceLostLine += 1
+                    nextLineFollowerData = LineFollowerActions.StrongRight(self, True)
+                    return StrongRight(nextLineFollowerData)
+                else: 
+                    self.cycleSinceLostLine = 0
+                    nextLineFollowerData = LineFollowerActions.VeryStrongRight(self, True)
+                    return VeryStrongRight(nextLineFollowerData)
             else:
                 return EXIT
         case VeryStrongRight(lineFollowerData):
