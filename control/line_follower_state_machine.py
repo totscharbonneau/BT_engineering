@@ -182,12 +182,12 @@ def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
             if(nextState != None):
                 return nextState
             if((lineFollowerData == [0,0,0,0,0]) | (lineFollowerData == [0,1,1,1,0])):
-                if self.cycleSinceLostLine < 15:
-                    self.self.cycleSinceLostLine += 1
+                if self._stateActions.cycleSinceLostLine < 15:
+                    self._stateActions.cycleSinceLostLine += 1
                     nextLineFollowerData = LineFollowerActions.StrongRight(self, True)
                     return StrongRight(nextLineFollowerData)
                 else: 
-                    self.cycleSinceLostLine = 0
+                    self._stateActions.cycleSinceLostLine = 0
                     nextLineFollowerData = LineFollowerActions.VeryStrongRight(self, True)
                     return VeryStrongRight(nextLineFollowerData)
             else:
