@@ -145,9 +145,9 @@ class StateMachine:
             if(self._lastSpeed <= 15):
                 self._forward = False
                 self._backward = False
-        elif(self._forward & !self._backward):
+        elif(self._forward and not self._backward):
             self._api.backWheels.forward()
-        elif(!self._forward & self._backward)
+        elif(not self._forward and self._backward):
             self._api.backWheels.backward()
         if(self._targetSpeed > self._lastSpeed):
             self._lastSpeed += 3
