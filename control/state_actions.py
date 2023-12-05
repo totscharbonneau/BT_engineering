@@ -16,6 +16,7 @@ class StateActions:
     def lineFollowerAction(self):
         self._stateActions.lineFollowerState = doLineFollowerStateAction(self, lineFollowerState=self._stateActions.lineFollowerState)
         distance = self._api.ultrasonicAvoidance.get_distance()
+        print(distance)
         if((distance < 20) & (distance >= 0)):
             obstacle = True
         else:
