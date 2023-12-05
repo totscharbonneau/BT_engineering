@@ -5,6 +5,9 @@ with open("control/line_follower_state_machine.py") as f:
 class StateActions:
     lineFollowerState = RightAhead([0,0,1,0,0])
     goAroundState = ['TURN_LEFT', 0]
+    finalbackwardState = ['SKIP_T', 0]
+    tStopState = ['SKIP_T', 0]
+    finalStopState = ['SKIP_T', 0]
     
 
     def __init__(self):
@@ -12,21 +15,20 @@ class StateActions:
 
     def lineFollowerAction(self):
         self._stateActions.lineFollowerState = doLineFollowerStateAction(self, lineFollowerState=self._stateActions.lineFollowerState)
-        self._api.backWheels.forward()
-        self._targetSpeed = 50
         distance = self._api.ultrasonicAvoidance.get_distance()
         if((distance < 20) & (distance >= 0)):
             obstacle = True
         else:
             obstacle = False
         if(self._stateActions.lineFollowerState == None):
+            self._stateActions.lineFollowerState = RightAhead([0,0,1,0,0])
             finalT = True
         else:
             finalT = False
         return obstacle, finalT
 
     def stopAction(self):
-        self._api.backWheels.forward()
+        self._forward = True
         self._targetSpeed = 25
         if(self._api.ultrasonicAvoidance.less_than(10.5) == 1):
             self._targetSpeed = 0
@@ -36,7 +38,7 @@ class StateActions:
         return stopped
 
     def backwardAction(self):
-        self._api.backWheels.backward()
+        self._backward = True
         distance = self._api.ultrasonicAvoidance.get_distance()
         done = False
         if(distance < 20):
@@ -48,23 +50,23 @@ class StateActions:
         return done
 
     def goAroundAction(self):
-        self._api.backWheels.forward()
+        self._forward = True
         self._targetSpeed = 60
         done = False
         if(self._stateActions.goAroundState[0] == 'TURN_LEFT'):
-            self._targetAngle = 50 # 65
+            self._targetAngle = 65 # 65
             self._stateActions.goAroundState[1] += 1
-            if(self._stateActions.goAroundState[1] == 60):
+            if(self._stateActions.goAroundState[1] == 67):
                 self._stateActions.goAroundState[0] = 'RIGHT_AHEAD'
                 self._stateActions.goAroundState[1] = 0
         elif(self._stateActions.goAroundState[0] == 'RIGHT_AHEAD'):
-            self._targetAngle = 110 #90
+            self._targetAngle = 90 #90
             self._stateActions.goAroundState[1] += 1
-            if(self._stateActions.goAroundState[1] == 120): #50
+            if(self._stateActions.goAroundState[1] == 50): #50
                 self._stateActions.goAroundState[0] = 'TURN_RIGHT'
                 self._stateActions.goAroundState[1] = 0
         elif(self._stateActions.goAroundState[0] == 'TURN_RIGHT'):
-            self._targetAngle = 90 #115
+            self._targetAngle = 115 #115
             self._stateActions.goAroundState[1] += 1
             if(self._stateActions.goAroundState[1] == 5):
                 self._stateActions.goAroundState[0] = 'TURN_LEFT'
@@ -73,24 +75,95 @@ class StateActions:
         return done
         
     def tStop(self):
-        self._api.backWheels.forward()
-        self._targetSpeed = 0
-        stopped = True
-        test = TEST
-        return stopped, test
+        #print((self._stateActions.tStopState, self._stateActions.lineFollowerState))
+        if(TEST):
+            self._targetSpeed = 45
+            if(self._stateActions.tStopState[0] == 'SKIP_T'):
+                stopped = False
+                self._stateActions.tStopState[1] += 1
+                if(self._stateActions.tStopState[1] == 30):
+                    self._stateActions.tStopState[0] = 'SEARCH_T'
+                    self._stateActions.tStopState[1] = 0
+            elif(self._stateActions.tStopState[0] == 'SEARCH_T'):
+                self._stateActions.lineFollowerState = doLineFollowerStateAction(self, lineFollowerState=self._stateActions.lineFollowerState)
+                if(self._stateActions.lineFollowerState == None):
+                    self._stateActions.lineFollowerState = RightAhead([0,0,1,0,0])
+                    stopped = True
+                    self._forward = True
+                    self._targetSpeed = 0
+                    self._stateActions.tStopState[0] = 'SKIP_T'
+                    self._stateActions.tStopState[1] = 0
+                else:
+                    stopped = False
+        else:
+            self._forward = True
+            self._targetSpeed = 0
+            self._targetAngle = 90
+            stopped = True
+        return stopped, TEST
 
     def finalBackward(self):
-        self._api.backWheels.backward()
-        self._targetSpeed = 30
-        self._stateActions.lineFollowerState = doLineFollowerStateAction(self, lineFollowerState=self._stateActions.lineFollowerState)
-        if(self._stateActions.lineFollowerState == None):
-            done = True
-        else:
+        #print((self._stateActions.finalbackwardState, self._stateActions.lineFollowerState))
+        self._backward = True
+        if(self._stateActions.finalbackwardState[0] == 'SKIP_T'):
             done = False
+            self._stateActions.finalbackwardState[1] += 1
+            if(self._stateActions.finalbackwardState[1] == 30):
+                self._stateActions.finalbackwardState[0] = 'SEARCH_T'
+                self._stateActions.finalbackwardState[1] = 0
+        elif(self._stateActions.finalbackwardState[0] == 'SEARCH_T'):
+            self._stateActions.lineFollowerState = doLineFollowerStateAction(self, lineFollowerState=self._stateActions.lineFollowerState)
+            if(self._stateActions.lineFollowerState == None):
+                self._stateActions.lineFollowerState = RightAhead([0,0,1,0,0])
+                done = True
+                self._stateActions.finalbackwardState[0] = 'SKIP_T'
+                self._stateActions.finalbackwardState[1] = 0
+            else:
+                done = False
+        self._targetSpeed = 30
+        self._targetAngle = 90
         return done
 
     def finalStop(self):
-        self._api.backWheels.forward()
-        self._targetSpeed = 0
-        stopped = True
+        #print((self._stateActions.finalStopState, self._stateActions.lineFollowerState))
+        self._forward = True
+        self._targetSpeed = 45
+        stopped = False
+        if(self._stateActions.finalStopState[0] == 'SKIP_T'):
+            self._stateActions.finalStopState[1] += 1
+            if(self._stateActions.finalStopState[1] == 30):
+                self._stateActions.finalStopState[0] = 'SEARCH_T'
+                self._stateActions.finalStopState[1] = 0
+        elif(self._stateActions.finalStopState[0] == 'SEARCH_T'):
+            self._stateActions.lineFollowerState = doLineFollowerStateAction(self, lineFollowerState=self._stateActions.lineFollowerState)
+            if(self._stateActions.lineFollowerState == None):
+                self._stateActions.lineFollowerState = RightAhead([0,0,1,0,0])
+                self._stateActions.finalStopState[0] = 'SKIP_T2'
+                self._stateActions.finalStopState[1] = 0
+        elif(self._stateActions.finalStopState[0] == 'SKIP_T2'):
+            self._stateActions.finalStopState[1] += 1
+            if(self._stateActions.finalStopState[1] == 30):
+                self._stateActions.finalStopState[0] = 'FINAL_LINE'
+                self._stateActions.finalStopState[1] = 0
+        elif(self._stateActions.finalStopState[0] == 'FINAL_LINE'):
+            self._stateActions.lineFollowerState = doLineFollowerStateAction(self, lineFollowerState=self._stateActions.lineFollowerState)
+            if(self._stateActions.lineFollowerState == None):
+                self._stateActions.lineFollowerState = RightAhead([0,0,1,0,0])
+                stopped = True
+                self._stateActions.finalStopState[0] = 'SKIP_T'
+                self._stateActions.finalStopState[1] = 0
+        self._targetAngle = 90
         return stopped
+
+    def goBehind(self):
+            self._backward = True
+            self._targetSpeed = 35
+            done = False
+            if(done == False):
+                self._targetAngle = 0
+                self._stateActions.goAroundState[1] += 1
+                if(self._stateActions.goAroundState[1] == 150):
+                    self._targetSpeed = 0
+                    self._stateActions.goAroundState[1] = 0
+                    done = True
+            return done

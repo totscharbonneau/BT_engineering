@@ -45,6 +45,8 @@ class StateMachine:
     _targetSpeed = 0
     _lastAngle = 90 
     _lastSpeed = 0
+    _forward = False
+    _backward = False
 
     def __init__(self, api):
         self._api = api
@@ -118,22 +120,35 @@ class StateMachine:
         for i in range(NUMBEROFCYCLES):
             print([i, stateobj])
             stateobj = StateMachine.doStateAction(self=self, state=stateobj)
+            if(stateobj == EXIT):
+                self._targetAngle = 90
+                self._targetSpeed = 0
             self.adjustAngle()
             self.adjustSpeed()
             # self._api.move()
             self._api.cycleAction(i)
+        self._api.backWheels.speed = 0
     
     def adjustAngle(self):
-        if(self._targetAngle > self._lastAngle+9):
-            self._lastAngle += 6
+        if(self._targetAngle > self._lastAngle+20):
+            self._lastAngle += 15
             self._api.frontWheels.turn(self._lastAngle)
-        elif(self._targetAngle < self._lastAngle-9):
-            self._lastAngle -= 6
+        elif(self._targetAngle < self._lastAngle-20):
+            self._lastAngle -= 15
             self._api.frontWheels.turn(self._lastAngle)
         else:
             self._api.frontWheels.turn(self._targetAngle)
 
     def adjustSpeed(self):
+        if(self._forward & self._backward):
+            self._targetSpeed = 15
+            if(self._lastSpeed <= 15):
+                self._forward = False
+                self._backward = False
+        elif(self._forward and not self._backward):
+            self._api.backWheels.forward()
+        elif(not self._forward and self._backward):
+            self._api.backWheels.backward()
         if(self._targetSpeed > self._lastSpeed):
             self._lastSpeed += 3
             self._api.backWheels.speed = self._lastSpeed

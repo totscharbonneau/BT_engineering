@@ -12,6 +12,7 @@
 '''
 import time
 import RPi.GPIO as GPIO
+from real_api.Ultrasonic_Filter import *
 
 class Ultrasonic_Avoidance(object):
 	timeout = 0.05
@@ -19,6 +20,7 @@ class Ultrasonic_Avoidance(object):
 	def __init__(self, channel):
 		self.channel = channel
 		GPIO.setmode(GPIO.BCM)
+		self.filter = FiltreUltrason()
 
 	def distance(self):
 		pulse_end = 0
@@ -62,7 +64,8 @@ class Ultrasonic_Avoidance(object):
 			a = self.distance()
 			#print('    %s' % a)
 			sum += a
-		return int(sum/mount)
+		return self.filter.RunningAverage(int(sum/mount))
+
 	def less_than(self, alarm_gate):
 		dis = self.get_distance()
 		status = 0
