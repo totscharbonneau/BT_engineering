@@ -1,5 +1,16 @@
 import numpy, math
 
+def get_contexteoverwrite():
+    for i, area in enumerate(bpy.context.screen.areas):
+        if area.type == 'VIEW_3D':
+            view3d = bpy.context.screen.areas[i]
+            context_override = {'window': bpy.context.window, 
+                    'screen': bpy.context.screen, 
+                    'area' : view3d}
+            return context_override
+    return None
+
+
 class SimFrontWheels:
     __real_angle = 0
     wanted_angle = 0
@@ -9,12 +20,15 @@ class SimFrontWheels:
     __wheel3 = None
     __picar = None
     __simBackWheels = None
+    # __wheel_base = None
+
 
     def __init__(self, parent, simBackWheels):
         self.__wheel0 = parent._objects["wheel0"]
         self.__wheel2 = parent._objects["wheel2"]
         self.__wheel3 = parent._objects["wheel3"]
         self.__picar = parent._objects["picar"]
+        # self.__wheel_base = numpy.abs(self.__wheel2.location[1] - self.__wheel0.location[1])
         self.__simBackWheels = simBackWheels
         self.__real_angle = self.__wheel2.rotation_euler[0]
 

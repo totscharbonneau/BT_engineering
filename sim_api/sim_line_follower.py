@@ -5,9 +5,11 @@ class SimLineFollower:
     __sensorsMesh = tuple(bmesh.new() for i in range(0, 5))
     __trackTree = None
     __references = None
+    __parent = None
     
     def __init__(self, parent, address=None, references=tuple(int(512) for i in range(0, 5))):
         self.__references = references
+        self.__parent = parent
         self.__sensors = tuple(parent._objects[f"lineSensor{i}"] for i in range(0, 5))
         trackMesh = bmesh.new()
         trackMesh.from_mesh(parent._objects["line"].data)
@@ -31,16 +33,30 @@ class SimLineFollower:
         return self.read_raw()
 
     def read_digital(self):	
-        lt = self.read_analog()
-        digital_list = []
-        for i in range(0, 5):
-            if lt[i] < self.__references[i]:
-                digital_list.append(0)
-            elif lt[i] > self.__references[i]:
-                digital_list.append(1)
-            else:
-                digital_list.append(-1)
-        return digital_list
+        sensor0 = bpy.data.objects["Sensor_0"]
+        sensor1 = bpy.data.objects["Sensor_1"]
+        sensor2 = bpy.data.objects["Sensor_2"]
+        sensor3 = bpy.data.objects["Sensor_3"]
+        sensor4 = bpy.data.objects["Sensor_4"]
+        output = []
+        sensorlist = [sensor0,sensor1,sensor2,sensor3,sensor4]
+        bm_track = bmesh.new()
+        bm_track.from_mesh(self.__parent._objects["line"].data)
+        bm_track.transform(self.__parent._objects["line"].matrix_world) 
+        obj_track_BVHtree = mathutils.bvhtree.BVHTree.FromBMesh(bm_track) 
+
+        for sensor in sensorlist:
+
+            bm1 = bmesh.new()
+            bm1.from_mesh(sensor.data)
+            bm1.transform(sensor.matrix_world)
+            obj1_BVHtree = mathutils.bvhtree.BVHTree.FromBMesh(bm1)
+            overlap = obj1_BVHtree.overlap(obj_track_BVHtree)
+
+            output.append(int(bool(overlap)))
+        
+        return output
+        
 
     def get_average(self, mount):
         if not isinstance(mount, int):

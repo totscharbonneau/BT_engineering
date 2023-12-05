@@ -1,6 +1,11 @@
 import bpy
 import math
+import bpy
+import math
 lineWidth = 0.018
+general_scale = 0.001 # MODIFIER LA TAILLE DE RÉFÉRENCE
+largeur = 18
+
 general_scale = 0.001 # MODIFIER LA TAILLE DE RÉFÉRENCE
 
 class TrackFactory:

@@ -72,7 +72,7 @@ class LineFollowerActions:
     def VeryStrongRight(self, isFirst=False):
         if(isFirst):
             self._cycles = 0
-        elif(self._cycles < 60):
+        elif(self._cycles < 30):
             self._forward = True
             self._targetSpeed = 50
             self._targetAngle = 135
@@ -81,4 +81,4 @@ class LineFollowerActions:
             self._targetSpeed = 30
             self._targetAngle = 45
         self._cycles += 1
-        return self._api.lineFollower.read_digital()
+        return self._api.lineFollower.read_digital(), self._cycles
