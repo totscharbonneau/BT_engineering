@@ -139,8 +139,14 @@ def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
             if(nextState != None):
                 return nextState
             if((lineFollowerData == [0,0,0,0,0]) | (lineFollowerData == [0,1,1,1,0])):
-                nextLineFollowerData = LineFollowerActions.VeryStrongLeft(self, True)
-                return VeryStrongLeft(nextLineFollowerData)
+                if self._stateActions.cycleSinceLostLine < 30:
+                    self._stateActions.cycleSinceLostLine += 1
+                    nextLineFollowerData = LineFollowerActions.StrongLeft(self)
+                    return StrongRight(nextLineFollowerData)
+                else: 
+                    self._stateActions.cycleSinceLostLine = 0
+                    nextLineFollowerData = LineFollowerActions.VeryStrongLeft(self, True)
+                    return VeryStrongLeft(nextLineFollowerData)
             else:
                 return EXIT
         case VeryStrongLeft(lineFollowerData):
@@ -182,9 +188,9 @@ def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
             if(nextState != None):
                 return nextState
             if((lineFollowerData == [0,0,0,0,0]) | (lineFollowerData == [0,1,1,1,0])):
-                if self._stateActions.cycleSinceLostLine < 15:
+                if self._stateActions.cycleSinceLostLine < 30:
                     self._stateActions.cycleSinceLostLine += 1
-                    nextLineFollowerData = LineFollowerActions.StrongRight(self, True)
+                    nextLineFollowerData = LineFollowerActions.StrongRight(self)
                     return StrongRight(nextLineFollowerData)
                 else: 
                     self._stateActions.cycleSinceLostLine = 0

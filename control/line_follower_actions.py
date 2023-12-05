@@ -34,7 +34,7 @@ class LineFollowerActions:
     def VeryStrongLeft(self, isFirst=False):
         if(isFirst):
             self._cycles = 0
-        elif(self._cycles < 30):
+        elif(self._cycles < 0):
             self._forward = True
             self._targetSpeed = 50
             self._targetAngle = 45
