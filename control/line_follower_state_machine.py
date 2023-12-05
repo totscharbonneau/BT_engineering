@@ -184,23 +184,13 @@ def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
             if(nextState != None):
                 return nextState
             if((lineFollowerData == [0,0,0,0,0]) | (lineFollowerData == [0,1,1,1,0])):
-                nextLineFollowerData, cycle = LineFollowerActions.VeryStrongRight(self, True)
+                nextLineFollowerData = LineFollowerActions.VeryStrongRight(self, True)
                 return VeryStrongRight(nextLineFollowerData)
             else:
                 return EXIT
         case VeryStrongRight(lineFollowerData):
             nextLineFollowerData, cycle = LineFollowerActions.VeryStrongRight(self)
-            if cycle >= 30:
-                if nextLineFollowerData[2] == 0:
-                    return VeryStrongRight(nextLineFollowerData)
-                else:
-                    return StrongRight(nextLineFollowerData)
+            if nextLineFollowerData[2] == 0:
+                return VeryStrongRight(nextLineFollowerData)
             else:
-                nextState = lineFollowerCommonChoice(self, lineFollowerData)
-                if(nextState != None):
-                    return nextState
-                if((lineFollowerData == [0,0,0,0,0]) | (lineFollowerData == [0,1,1,1,0])):
-                    nextLineFollowerData = LineFollowerActions.VeryStrongLeft(self)
-                    return VeryStrongLeft(nextLineFollowerData)
-                else:
-                    return EXIT
+                return StrongRight(nextLineFollowerData)
