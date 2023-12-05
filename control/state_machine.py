@@ -131,7 +131,7 @@ class StateMachine:
         self._api.backWheels.speed = 0
     
     def adjustAngle(self):
-        self._api.frontWheels.turn(self.mouvementControl.ajusterAngle(self._targetAngle))
+        self._api.frontWheels.turn(int(self.mouvementControl.ajusterAngle(self._targetAngle)))
         """if(self._targetAngle > self._lastAngle+20):
             self._lastAngle += 15
             self._api.frontWheels.turn(self._lastAngle)
@@ -142,7 +142,7 @@ class StateMachine:
             self._api.frontWheels.turn(self._targetAngle)"""
 
     def adjustSpeed(self):
-        self._api.backWheels.speed = self.mouvementControl.ajusterVitesse(self._targetSpeed)
+        self._api.backWheels.speed = int(self.mouvementControl.ajusterVitesse(self._targetSpeed))
 
         """if(self._targetSpeed > self._lastSpeed):
         if(self._forward & self._backward):
