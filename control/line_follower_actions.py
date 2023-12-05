@@ -10,7 +10,7 @@ class LineFollowerActions:
     def VeryWeakLeft(self):
         self._forward = True
         self._targetSpeed = 70
-        self._targetAngle = 80
+        self._targetAngle = 85
         return self._api.lineFollower.read_digital()
 
     def WeakLeft(self):
@@ -48,7 +48,7 @@ class LineFollowerActions:
     def VeryWeakRight(self):
         self._forward = True
         self._targetSpeed = 80
-        self._targetAngle = 100
+        self._targetAngle = 95
         return self._api.lineFollower.read_digital()
 
     def WeakRight(self):

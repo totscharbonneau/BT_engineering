@@ -43,7 +43,7 @@ class MouvementControl:
 
     def ajusterAngle(self, angleCible):
         deltaAngle = angleCible - self.angleRoue
-        if deltaAngle > 0:
+        """if deltaAngle > 0:
             if deltaAngle <= 10:
                 self.niveauDeVirage = 1
             elif deltaAngle <= 20:
@@ -62,8 +62,8 @@ class MouvementControl:
                 self.niveauDeVirage = -3
             else:
                 self.niveauDeVirage = -4
-        self.virage()
-        return self.angleRoue
+        self.virage()"""
+        return self.angleRoue + deltaAngle/5
 
     def reculerDistantce(self, puissanceMoteurCible, distance):
         if self.reculer == "null":
