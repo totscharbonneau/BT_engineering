@@ -48,6 +48,14 @@ class StrongRight:
 class VeryStrongRight:
     lineFollowerData: [int, int, int, int, int]
 
+@dataclass
+class lostRight:
+    lineFollowerData: [int, int, int, int, int]
+
+@dataclass
+class lostLeft:
+    lineFollowerData: [int, int, int, int, int]
+
 EXIT = None
 
 LineFollowerState = RightAhead | VeryWeakLeft | WeakLeft | Left | StrongLeft | VeryStrongLeft | VeryWeakRight | WeakRight | Right | StrongRight | VeryStrongRight
@@ -182,11 +190,10 @@ def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
             else:
                 return EXIT
         case VeryStrongRight(lineFollowerData):
-            nextState = lineFollowerCommonChoice(self, lineFollowerData)
-            if(nextState != None):
-                return nextState
-            if((lineFollowerData == [0,0,0,0,0]) | (lineFollowerData == [0,1,1,1,0])):
-                nextLineFollowerData = LineFollowerActions.VeryStrongRight(self)
+            nextLineFollowerData, cycle = LineFollowerActions.VeryStrongRight(self)
+            if cycle < 100:
                 return VeryStrongRight(nextLineFollowerData)
             else:
-                return EXIT
+                nextState = lineFollowerCommonChoice(self, lineFollowerData)
+                if(nextState != None):
+                    return nextState
