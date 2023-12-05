@@ -49,7 +49,7 @@ class Line_Follower(object):
 				digital_list.append(1)
 			else:
 				digital_list.append(-1)
-		print(digital_list)
+		# print(digital_list)
 		return digital_list
 
 	def get_average(self, mount):
