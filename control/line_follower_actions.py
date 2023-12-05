@@ -42,6 +42,7 @@ class LineFollowerActions:
             self._backward = True
             self._targetSpeed = 50
             self._targetAngle = 135
+        self._cycles += 1
         return self._api.lineFollower.read_digital()
 
     def VeryWeakRight(self):
@@ -79,4 +80,5 @@ class LineFollowerActions:
             self._backward = True
             self._targetSpeed = 30
             self._targetAngle = 45
+        self._cycles += 1
         return self._api.lineFollower.read_digital()
