@@ -87,7 +87,7 @@ class StateMachine:
                         nextDone = StateActions.goAroundAction(self)
                         return GoAround(nextDone)
                     case True:
-                        nextObstacle, nextFinalT = StateActions.lineFollowerAction(self)
+                        nextObstacle, nextFinalT = StateActions.lineFollowerAction(self, True)
                         return FollowLine(nextObstacle, nextFinalT)
             case TStop(stopped, isTest):
                 match (stopped, isTest):
@@ -130,6 +130,8 @@ class StateMachine:
         self._api.backWheels.speed = 0
     
     def adjustAngle(self):
+        if(self._forward & self._backward):
+            self._targetAngle = self._lastAngle
         if(self._targetAngle > self._lastAngle+20):
             self._lastAngle += 15
             self._api.frontWheels.turn(self._lastAngle)

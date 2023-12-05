@@ -4,6 +4,8 @@ with open("control/line_follower_state_machine.py") as f:
 
 class StateActions:
     lineFollowerState = RightAhead([0,0,1,0,0])
+    lastLineFollowerState = RightAhead([0,0,1,0,0])
+    lineFollowerSubState = ['NORMAL', 0]
     goAroundState = ['TURN_LEFT', 0]
     finalbackwardState = ['SKIP_T', 0]
     tStopState = ['SKIP_T', 0]
@@ -13,8 +15,27 @@ class StateActions:
     def __init__(self):
         lineFollowerState = RightAhead([0,0,1,0,0])
 
-    def lineFollowerAction(self):
+    def lineFollowerAction(self, isFirst=False):
+        if(isFirst):
+            self._stateActions.lineFollowerSubState[1] = 0
+        self._stateActions.lastLineFollowerState = self._stateActions.lineFollowerState
         self._stateActions.lineFollowerState = doLineFollowerStateAction(self, lineFollowerState=self._stateActions.lineFollowerState)
+        if((self._stateActions.lastLineFollowerState != self._stateActions.lineFollowerState) & self._stateActions.lastLineFollowerState = VeryStrongRight):
+            self._stateActions.lineFollowerSubState = ['TURN_RIGHT', 0]
+        elif((self._stateActions.lastLineFollowerState != self._stateActions.lineFollowerState) & self._stateActions.lastLineFollowerState = VeryStrongLeft):
+            self._stateActions.lineFollowerSubState = ['TURN_LEFT', 0]
+        if(self._stateActions.lineFollowerSubState[0] == 'TURN_LEFT'):
+            self._targetAngle = 45
+            if(self._stateActions.lineFollowerSubState[1] = 20 | self._stateActions.lineFollowerState = RightAhead):
+                self._stateActions.lineFollowerSubState[0] = 'NORMAL'
+                self._stateActions.lineFollowerSubState[1] = 0 
+            self._stateActions.lineFollowerSubState[1] += 1
+        elif(self._stateActions.lineFollowerSubState[0] == 'TURN_RIGHT'):
+            self._targetAngle = 135
+            if(self._stateActions.lineFollowerSubState[1] = 20 | self._stateActions.lineFollowerState = RightAhead):
+                self._stateActions.lineFollowerSubState[0] = 'NORMAL'
+                self._stateActions.lineFollowerSubState[1] = 0 
+            self._stateActions.lineFollowerSubState[1] += 1
         distance = self._api.ultrasonicAvoidance.get_distance()
         if((distance < 20) & (distance >= 0)):
             obstacle = True
