@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-
+from control.mouvement_control import *
 with open("control/state_actions.py") as f:
     code = f.read()
     exec(code)
@@ -49,6 +49,7 @@ class StateMachine:
     def __init__(self, api):
         self._api = api
         self._stateActions = StateActions()
+        self.mouvementControl = MouvementControl()
 
     def doStateAction(self, state : State):
         match state:
@@ -128,19 +129,22 @@ class StateMachine:
         self._api.backWheels.speed = 0
     
     def adjustAngle(self):
-        if(self._targetAngle > self._lastAngle+20):
+        self._api.frontWheels.turn(self.mouvementControl.ajusterAngle(self._targetAngle))
+        """if(self._targetAngle > self._lastAngle+20):
             self._lastAngle += 15
             self._api.frontWheels.turn(self._lastAngle)
         elif(self._targetAngle < self._lastAngle-20):
             self._lastAngle -= 15
             self._api.frontWheels.turn(self._lastAngle)
         else:
-            self._api.frontWheels.turn(self._targetAngle)
+            self._api.frontWheels.turn(self._targetAngle)"""
 
     def adjustSpeed(self):
-        if(self._targetSpeed > self._lastSpeed):
+        self._api.backWheels.speed(self.mouvementControl.ajusterVitesse(self._targetSpeed))
+
+        """if(self._targetSpeed > self._lastSpeed):
             self._lastSpeed += 3
             self._api.backWheels.speed = self._lastSpeed
         elif(self._targetSpeed < self._lastSpeed):
             self._lastSpeed -= 3
-            self._api.backWheels.speed = self._lastSpeed
+            self._api.backWheels.speed = self._lastSpeed"""
