@@ -154,7 +154,7 @@ def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
             if nextLineFollowerData[2] == 0:
                 return VeryStrongLeft(nextLineFollowerData)
             else:
-                return StrongRight(nextLineFollowerData)
+                return StrongLeft(nextLineFollowerData)
         case VeryWeakRight(lineFollowerData):
             nextState = lineFollowerCommonChoice(self, lineFollowerData)
             if(nextState != None):
