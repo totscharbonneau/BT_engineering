@@ -1,7 +1,3 @@
-with open("control/line_follower_state_machine.py") as f:
-    code = f.read()
-    exec(code)
-
 import time  # Confirmer ou placer le import
 
 
@@ -33,15 +29,15 @@ class MouvementControl:
         self.puissanceCible = puissanceMoteurCible
         if self.puissanceMoteurPiCar < puissanceMoteurCible and (
                 self.acceleration == "null" or self.acceleration == "termine"):
-            self.accelerationInit(self)
+            self.accelerationInit()
         elif self.puissanceMoteurPiCar < puissanceMoteurCible and self.acceleration == "en_cours":
-            self.accelerationReel(self)
+            self.accelerationReel()
         # deceleration
         elif self.puissanceMoteurPiCar > puissanceMoteurCible and (
                 self.deceleration == "null" or self.acceleration == "termine"):
-            self.decelerationInit(self)
+            self.decelerationInit()
         elif self.puissanceMoteurPiCar > puissanceMoteurCible and self.deceleration == "en_cours":
-            self.decelerationReel(self)
+            self.decelerationReel()
         return self.puissanceMoteurPiCar
 
     def ajusterAngle(self, angleCible):
@@ -112,7 +108,7 @@ class MouvementControl:
         self.tempsNouvelleAction = time.time()
         self.delta_t = self.tempsNouvelleAction - self.tempsDerniereAction
         # gestion de la distance total parcourue
-        self.distanceParcourue = self.calculDistanceParcourue(self)
+        self.distanceParcourue = self.calculDistanceParcourue()
         # equation linéaire de la puissance moteur en fonction du temps
         ajustementEquation = (self.puissanceMoteurPiCar - 7.4324) / -208.11  # mise en equation, voir Excel
         puissanceMoteur = 208.11 * (self.delta_t + ajustementEquation) + 7.4324  # mise en equation, voir Excel
@@ -132,7 +128,7 @@ class MouvementControl:
         self.tempsNouvelleAction = time.time()
         self.delta_t = self.tempsNouvelleAction - self.tempsDerniereAction
         # gestion de la distance total parcourue
-        self.distanceParcourue = self.calculDistanceParcourue(self)
+        self.distanceParcourue = self.calculDistanceParcourue()
         # equation linéaire de la puissance moteur en fonction du temps
         ajustementEquation = (self.puissanceMoteurPiCar - 100) / -200  # mise en equation, voir Excel
         puissanceMoteur = -200 * (self.delta_t + ajustementEquation) + 100  # mise en equation, voir Excel
