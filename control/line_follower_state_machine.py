@@ -97,6 +97,7 @@ def lineFollowerCommonChoice(self, lineFollowerData):
     return None
 
 def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
+    print(lineFollowerState)
     match lineFollowerState:
         case RightAhead(lineFollowerData):
             nextState = lineFollowerCommonChoice(self, lineFollowerData)
@@ -142,7 +143,7 @@ def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
                 if self._stateActions.cycleSinceLostLine < 30:
                     self._stateActions.cycleSinceLostLine += 1
                     nextLineFollowerData = LineFollowerActions.StrongLeft(self)
-                    return StrongRight(nextLineFollowerData)
+                    return StrongLeft(nextLineFollowerData)
                 else: 
                     self._stateActions.cycleSinceLostLine = 0
                     nextLineFollowerData = LineFollowerActions.VeryStrongLeft(self, True)
