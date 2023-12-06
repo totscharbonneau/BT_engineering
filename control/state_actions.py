@@ -1,3 +1,5 @@
+import numpy as np
+
 with open("control/line_follower_state_machine.py") as f:
     code = f.read()
     exec(code)
@@ -68,7 +70,8 @@ class StateActions:
         elif(self._stateActions.goAroundState[0] == 'TURN_RIGHT'):
             self._targetAngle = 115 #115
             self._stateActions.goAroundState[1] += 1
-            if(self._api.lineFollower.read_digital()[0] == 1):
+            if(np.sum(self._api.lineFollower.read_digital()) >= 1):
+                print("line found")
                 self._stateActions.goAroundState[0] = 'TURN_LEFT'
                 self._stateActions.goAroundState[1] = 0
                 done = True
