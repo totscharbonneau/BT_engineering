@@ -37,7 +37,7 @@ class LineFollowerActions:
         elif(self._cycles < 3):
             self._forward = True
             self._targetSpeed = 0
-            self._targetAngle = 135
+            self._targetAngle = 45
         else:
             self._backward = True
             self._targetSpeed = 30
@@ -75,7 +75,7 @@ class LineFollowerActions:
         elif(self._cycles < 3):
             self._backward = True
             self._targetSpeed = 0
-            self._targetAngle = 45
+            self._targetAngle = 135
         else:
             self._backward = True
             self._targetSpeed = 30

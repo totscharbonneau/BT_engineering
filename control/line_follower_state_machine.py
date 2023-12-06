@@ -97,7 +97,7 @@ def lineFollowerCommonChoice(self, lineFollowerData):
     return None
 
 def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
-    # print(lineFollowerState)
+    print(lineFollowerState)
     match lineFollowerState:
         case RightAhead(lineFollowerData):
             nextState = lineFollowerCommonChoice(self, lineFollowerData)
@@ -155,6 +155,7 @@ def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
             if nextLineFollowerData[2] == 0:
                 return VeryStrongLeft(nextLineFollowerData)
             else:
+                self._targetSpeed = 0
                 return StrongLeft(nextLineFollowerData)
             
         case VeryWeakRight(lineFollowerData):
@@ -204,6 +205,7 @@ def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
             if nextLineFollowerData[2] == 0:
                 return VeryStrongRight(nextLineFollowerData)
             else:
+                self._targetSpeed = 0
                 return StrongRight(nextLineFollowerData)
             
         case HardRight(lineFollowerData):

@@ -33,7 +33,6 @@ class StateActions:
         self._forward = True
         self._targetSpeed = 20
         distance = self._api.ultrasonicAvoidance.get_distance()
-        print(distance)
         if(distance <= 10.5):
             self._targetSpeed = 0
             self._api.backWheels.speed = 0 
