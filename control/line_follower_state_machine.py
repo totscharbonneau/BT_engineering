@@ -97,7 +97,7 @@ def lineFollowerCommonChoice(self, lineFollowerData):
     return None
 
 def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
-    print(lineFollowerState)
+    # print(lineFollowerState)
     match lineFollowerState:
         case RightAhead(lineFollowerData):
             nextState = lineFollowerCommonChoice(self, lineFollowerData)

@@ -1,5 +1,5 @@
 import numpy as np
-
+import time
 with open("control/line_follower_state_machine.py") as f:
     code = f.read()
     exec(code)
@@ -32,9 +32,11 @@ class StateActions:
     def stopAction(self):
         self._forward = True
         self._targetSpeed = 25
-        if(self._api.ultrasonicAvoidance.less_than(10.5) == 1):
+        distance = self._api.ultrasonicAvoidance.get_distance()
+        if(distance <= 10.5):
             self._targetSpeed = 0
             stopped = True
+            time.sleep(2)
         else:
             stopped = False
         return stopped
