@@ -140,7 +140,7 @@ def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
             if(nextState != None):
                 return nextState
             if((lineFollowerData == [0,0,0,0,0]) | (lineFollowerData == [0,1,1,1,0])):
-                if self._stateActions.cycleSinceLostLine < 30:
+                if self._stateActions.cycleSinceLostLine < 20:
                     self._stateActions.cycleSinceLostLine += 1
                     nextLineFollowerData = LineFollowerActions.StrongLeft(self)
                     return StrongLeft(nextLineFollowerData)
@@ -156,6 +156,7 @@ def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
                 return VeryStrongLeft(nextLineFollowerData)
             else:
                 return StrongLeft(nextLineFollowerData)
+            
         case VeryWeakRight(lineFollowerData):
             nextState = lineFollowerCommonChoice(self, lineFollowerData)
             if(nextState != None):
