@@ -82,3 +82,10 @@ class LineFollowerActions:
             self._targetAngle = 45
         self._cycles += 1
         return self._api.lineFollower.read_digital(), self._cycles
+
+    def HardRight(self):
+        self._forward = True
+        self._targetSpeed = 50
+        self._targetAngle = 135
+        truevalue = self._api.lineFollower.read_digital()
+        return [0,0,truevalue[2], truevalue[3], truevalue[4]]

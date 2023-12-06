@@ -49,7 +49,7 @@ class VeryStrongRight:
     lineFollowerData: [int, int, int, int, int]
 
 @dataclass
-class hardRight:
+class HardRight:
     lineFollowerData: [int, int, int, int, int]
 
 @dataclass
@@ -58,7 +58,7 @@ class lostLeft:
 
 EXIT = None
 
-LineFollowerState = RightAhead | VeryWeakLeft | WeakLeft | Left | StrongLeft | VeryStrongLeft | VeryWeakRight | WeakRight | Right | StrongRight | VeryStrongRight
+LineFollowerState = RightAhead | VeryWeakLeft | WeakLeft | Left | StrongLeft | VeryStrongLeft | VeryWeakRight | WeakRight | Right | StrongRight | VeryStrongRight | HardRight
 
 def lineFollowerCommonChoice(self, lineFollowerData):
     if(lineFollowerData == ([0,0,1,0,0])):
@@ -97,7 +97,7 @@ def lineFollowerCommonChoice(self, lineFollowerData):
     return None
 
 def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
-    # print(lineFollowerState)
+    print(lineFollowerState)
     match lineFollowerState:
         case RightAhead(lineFollowerData):
             nextState = lineFollowerCommonChoice(self, lineFollowerData)
@@ -205,3 +205,10 @@ def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
                 return VeryStrongRight(nextLineFollowerData)
             else:
                 return StrongRight(nextLineFollowerData)
+        case HardRight(lineFollowerData):
+            nextLineFollowerData = LineFollowerActions.HardRight(self)
+            nextState = lineFollowerCommonChoice(self, lineFollowerData)
+            if(nextState != None):
+                return nextState
+            else:
+                return EXIT
