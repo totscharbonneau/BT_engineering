@@ -48,9 +48,17 @@ class StrongRight:
 class VeryStrongRight:
     lineFollowerData: [int, int, int, int, int]
 
+@dataclass
+class HardRight:
+    lineFollowerData: [int, int, int, int, int]
+
+@dataclass
+class lostLeft:
+    lineFollowerData: [int, int, int, int, int]
+
 EXIT = None
 
-LineFollowerState = RightAhead | VeryWeakLeft | WeakLeft | Left | StrongLeft | VeryStrongLeft | VeryWeakRight | WeakRight | Right | StrongRight | VeryStrongRight
+LineFollowerState = RightAhead | VeryWeakLeft | WeakLeft | Left | StrongLeft | VeryStrongLeft | VeryWeakRight | WeakRight | Right | StrongRight | VeryStrongRight | HardRight
 
 def lineFollowerCommonChoice(self, lineFollowerData):
     if(lineFollowerData == ([0,0,1,0,0])):
@@ -131,19 +139,24 @@ def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
             if(nextState != None):
                 return nextState
             if((lineFollowerData == [0,0,0,0,0]) | (lineFollowerData == [0,1,1,1,0])):
-                nextLineFollowerData = LineFollowerActions.VeryStrongLeft(self, True)
-                return VeryStrongLeft(nextLineFollowerData)
+                if self._stateActions.cycleSinceLostLine < 20:
+                    self._stateActions.cycleSinceLostLine += 1
+                    nextLineFollowerData = LineFollowerActions.StrongLeft(self)
+                    return StrongLeft(nextLineFollowerData)
+                else: 
+                    self._stateActions.cycleSinceLostLine = 0
+                    nextLineFollowerData = LineFollowerActions.VeryStrongLeft(self, True)
+                    return VeryStrongLeft(nextLineFollowerData)
             else:
                 return EXIT
         case VeryStrongLeft(lineFollowerData):
-            nextState = lineFollowerCommonChoice(self, lineFollowerData)
-            if(nextState != None):
-                return nextState
-            if((lineFollowerData == [0,0,0,0,0]) | (lineFollowerData == [0,1,1,1,0])):
-                nextLineFollowerData = LineFollowerActions.VeryStrongLeft(self)
+            nextLineFollowerData = LineFollowerActions.VeryStrongLeft(self)
+            if nextLineFollowerData[2] == 0:
                 return VeryStrongLeft(nextLineFollowerData)
             else:
-                return EXIT
+                self._targetSpeed = 0
+                return StrongLeft(nextLineFollowerData)
+            
         case VeryWeakRight(lineFollowerData):
             nextState = lineFollowerCommonChoice(self, lineFollowerData)
             if(nextState != None):
@@ -176,16 +189,32 @@ def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
             if(nextState != None):
                 return nextState
             if((lineFollowerData == [0,0,0,0,0]) | (lineFollowerData == [0,1,1,1,0])):
-                nextLineFollowerData = LineFollowerActions.VeryStrongRight(self, True)
-                return VeryStrongRight(nextLineFollowerData)
+                if self._stateActions.cycleSinceLostLine < 20:
+                    self._stateActions.cycleSinceLostLine += 1
+                    nextLineFollowerData = LineFollowerActions.StrongRight(self)
+                    return StrongRight(nextLineFollowerData)
+                else: 
+                    self._stateActions.cycleSinceLostLine = 0
+                    nextLineFollowerData = LineFollowerActions.VeryStrongRight(self, True)
+                    return VeryStrongRight(nextLineFollowerData)
             else:
                 return EXIT
         case VeryStrongRight(lineFollowerData):
-            nextState = lineFollowerCommonChoice(self, lineFollowerData)
-            if(nextState != None):
-                return nextState
-            if((lineFollowerData == [0,0,0,0,0]) | (lineFollowerData == [0,1,1,1,0])):
-                nextLineFollowerData = LineFollowerActions.VeryStrongRight(self)
+            nextLineFollowerData, cycle = LineFollowerActions.VeryStrongRight(self)
+            if nextLineFollowerData[2] == 0:
                 return VeryStrongRight(nextLineFollowerData)
             else:
-                return EXIT
+                self._targetSpeed = 0
+                return StrongRight(nextLineFollowerData)
+            
+        case HardRight(lineFollowerData):
+            nextLineFollowerData = LineFollowerActions.HardRight(self)
+            # print(nextLineFollowerData)
+            if(nextLineFollowerData == [0,0,0,0,0]):
+                  return HardRight(nextLineFollowerData)
+            else:
+                nextState = lineFollowerCommonChoice(self, nextLineFollowerData)
+                if(nextState != None):
+                    return nextState
+                else:
+                    return EXIT

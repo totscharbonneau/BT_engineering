@@ -118,7 +118,7 @@ class StateMachine:
     def loopStateMachine(self):
         stateobj = FollowLine(False, False)
         for i in range(NUMBEROFCYCLES):
-            print([i, stateobj])
+            # print([i, stateobj])
             stateobj = StateMachine.doStateAction(self=self, state=stateobj)
             if(stateobj == EXIT):
                 self._targetAngle = 90
@@ -133,10 +133,10 @@ class StateMachine:
         if(self._forward & self._backward):
             self._targetAngle = self._lastAngle
         if(self._targetAngle > self._lastAngle+20):
-            self._lastAngle += 15
+            self._lastAngle += 10
             self._api.frontWheels.turn(self._lastAngle)
         elif(self._targetAngle < self._lastAngle-20):
-            self._lastAngle -= 15
+            self._lastAngle -= 10
             self._api.frontWheels.turn(self._lastAngle)
         else:
             self._api.frontWheels.turn(self._targetAngle)
@@ -151,7 +151,12 @@ class StateMachine:
             self._api.backWheels.forward()
         elif(not self._forward and self._backward):
             self._api.backWheels.backward()
-        if(self._targetSpeed > self._lastSpeed):
+        if(self._targetSpeed == 0):
+            self._lastSpeed -= 7
+            if self._lastSpeed < 0:
+                self._lastSpeed = 0
+            self._api.backWheels.speed = self._lastSpeed
+        elif(self._targetSpeed > self._lastSpeed):
             self._lastSpeed += 3
             self._api.backWheels.speed = self._lastSpeed
         elif(self._targetSpeed < self._lastSpeed):

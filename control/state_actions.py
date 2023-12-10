@@ -1,3 +1,5 @@
+import numpy as np
+import time
 with open("control/line_follower_state_machine.py") as f:
     code = f.read()
     exec(code)
@@ -10,7 +12,7 @@ class StateActions:
     finalbackwardState = ['SKIP_T', 0]
     tStopState = ['SKIP_T', 0]
     finalStopState = ['SKIP_T', 0]
-    
+    cycleSinceLostLine = 0 
 
     def __init__(self):
         lineFollowerState = RightAhead([0,0,1,0,0])
@@ -50,10 +52,13 @@ class StateActions:
 
     def stopAction(self):
         self._forward = True
-        self._targetSpeed = 25
-        if(self._api.ultrasonicAvoidance.less_than(10.5) == 1):
+        self._targetSpeed = 20
+        distance = self._api.ultrasonicAvoidance.get_distance()
+        if(distance <= 10.5):
             self._targetSpeed = 0
+            self._api.backWheels.speed = 0 
             stopped = True
+            time.sleep(2)
         else:
             stopped = False
         return stopped
@@ -89,7 +94,8 @@ class StateActions:
         elif(self._stateActions.goAroundState[0] == 'TURN_RIGHT'):
             self._targetAngle = 115 #115
             self._stateActions.goAroundState[1] += 1
-            if(self._stateActions.goAroundState[1] == 5):
+            if(np.sum(self._api.lineFollower.read_digital()) >= 1):
+                print("line found")
                 self._stateActions.goAroundState[0] = 'TURN_LEFT'
                 self._stateActions.goAroundState[1] = 0
                 done = True

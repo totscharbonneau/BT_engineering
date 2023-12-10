@@ -5,9 +5,11 @@ class SimLineFollower:
     __sensorsMesh = tuple(bmesh.new() for i in range(0, 5))
     __trackTree = None
     __references = None
+    __parent = None
     
     def __init__(self, parent, address=None, references=tuple(int(512) for i in range(0, 5))):
         self.__references = references
+        self.__parent = parent
         self.__sensors = tuple(parent._objects[f"lineSensor{i}"] for i in range(0, 5))
         trackMesh = bmesh.new()
         trackMesh.from_mesh(parent._objects["line"].data)
