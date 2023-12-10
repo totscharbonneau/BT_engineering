@@ -1,6 +1,6 @@
 class SimBackWheels:
     __direction = 1
-    __currentspeed = 0
+    speed = 0
     __wheel0 = None
     __wheel1 = None
     __picar = None
@@ -16,14 +16,8 @@ class SimBackWheels:
     def backward(self):
         self.__direction = -1
 
-    def speed(self, speedint):
-        self.__currentspeed = speedint
-
     def getCurrentSpeed(self):
-        return self.__currentspeed
-
-    def stop(self):
-        self.__currentspeed = 0
+        return self.speed/3
 
     def direction(self):
         return self.__picar.matrix_world.to_quaternion() @ mathutils.Vector((0, 1, 0))

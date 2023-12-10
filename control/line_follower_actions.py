@@ -1,6 +1,4 @@
 class LineFollowerActions:
-    _cycles = 0
-
     def RightAhead(self):
         self._forward = True
         self._targetSpeed = 50

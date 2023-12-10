@@ -1,6 +1,6 @@
-SIMULATION = False
+SIMULATION = True
 RESET = True
-NUMBEROFCYCLES = 2000
+NUMBEROFCYCLES = 500
 TEST = False
 
 with open("control/state_machine.py") as f:

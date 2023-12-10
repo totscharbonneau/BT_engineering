@@ -47,6 +47,7 @@ class StateMachine:
     _lastSpeed = 0
     _forward = False
     _backward = False
+    _cycles = 0
 
     def __init__(self, api):
         self._api = api

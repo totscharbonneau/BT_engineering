@@ -62,6 +62,10 @@ class SimFrontWheels:
         bpy.data.objects['turningpoint'].select_set(True)
         bpy.ops.object.delete()
 
+    def turn(self, angle):
+        simAngle = angle - 90
+        self.wanted_angle = simAngle
+
     def get_contexteoverwrite(self):
         for i, area in enumerate(bpy.context.screen.areas):
             if area.type == 'VIEW_3D':
