@@ -209,7 +209,6 @@ def doLineFollowerStateAction(self, lineFollowerState: LineFollowerState):
             
         case HardRight(lineFollowerData):
             nextLineFollowerData = LineFollowerActions.HardRight(self)
-            # print(nextLineFollowerData)
             if(nextLineFollowerData == [0,0,0,0,0]):
                   return HardRight(nextLineFollowerData)
             else:

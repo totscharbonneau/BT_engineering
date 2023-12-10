@@ -118,14 +118,12 @@ class StateMachine:
     def loopStateMachine(self):
         stateobj = FollowLine(False, False)
         for i in range(NUMBEROFCYCLES):
-            # print([i, stateobj])
             stateobj = StateMachine.doStateAction(self=self, state=stateobj)
             if(stateobj == EXIT):
                 self._targetAngle = 90
                 self._targetSpeed = 0
             self.adjustAngle()
             self.adjustSpeed()
-            # self._api.move()
             self._api.cycleAction(i)
         self._api.backWheels.speed = 0
     

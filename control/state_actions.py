@@ -95,14 +95,12 @@ class StateActions:
             self._targetAngle = 115 #115
             self._stateActions.goAroundState[1] += 1
             if(np.sum(self._api.lineFollower.read_digital()) >= 1):
-                print("line found")
                 self._stateActions.goAroundState[0] = 'TURN_LEFT'
                 self._stateActions.goAroundState[1] = 0
                 done = True
         return done
         
     def tStop(self):
-        #print((self._stateActions.tStopState, self._stateActions.lineFollowerState))
         if(TEST):
             self._targetSpeed = 45
             if(self._stateActions.tStopState[0] == 'SKIP_T'):
@@ -130,7 +128,6 @@ class StateActions:
         return stopped, TEST
 
     def finalBackward(self):
-        #print((self._stateActions.finalbackwardState, self._stateActions.lineFollowerState))
         self._backward = True
         if(self._stateActions.finalbackwardState[0] == 'SKIP_T'):
             done = False
@@ -152,7 +149,6 @@ class StateActions:
         return done
 
     def finalStop(self):
-        #print((self._stateActions.finalStopState, self._stateActions.lineFollowerState))
         self._forward = True
         self._targetSpeed = 45
         stopped = False
