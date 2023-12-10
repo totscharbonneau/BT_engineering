@@ -77,8 +77,7 @@ class SimAPI:
         self.ultrasonicAvoidance = SimUltrasonicAvoidance(parent=self)
         self.lineFollower = SimLineFollower(parent=self)
 
-
-    def move(self):
+    def cycleAction(self, cycle):
         self.frontWheels.update()
         if self.frontWheels.getRealAngle() == 0:
             direction = self.backWheels.direction()
@@ -93,6 +92,4 @@ class SimAPI:
         bpy.ops.anim.keyframe_insert(type='LocRotScale')
         for obj in bpy.data.objects:
             obj.select_set(False)
-
-    def cycleAction(self, cycle):
         bpy.context.scene.frame_set(cycle)
