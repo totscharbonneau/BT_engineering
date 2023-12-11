@@ -1,5 +1,11 @@
 from dataclasses import dataclass
 
+# Fichier regroupant la machine à état principale régissant le comportement du PiCar.
+# Les différents états sont représentés en tant que classes.
+# Les changements d'états sont regis dans la fonction doStateAction
+# Les conditions relatives au changements d'états sont contenues dans les classes des états.
+# loopStateMachine est une boucle qui mets à jour la machine à état à chaque cycle et ajuste la vitesse et l'angle du PiCar
+
 with open("control/state_actions.py") as f:
     code = f.read()
     exec(code)

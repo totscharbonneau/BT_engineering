@@ -1,5 +1,11 @@
 from dataclasses import dataclass
 
+# Machine à état secondaire exécutée dans un contexte de suivi de ligne.
+# Les différents états sont représentés en tant que classes.
+# Les changements d'états sont regis dans la fonction doStateAction
+# La condition relative au changements d'états est contenue dans les classes des états.
+# Cette condition est le résultat de la lecture du changement de ligne.
+
 with open("control/line_follower_actions.py") as f:
     code = f.read()
     exec(code)

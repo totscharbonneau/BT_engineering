@@ -4,6 +4,8 @@ with open("control/line_follower_state_machine.py") as f:
     code = f.read()
     exec(code)
 
+# Fichier regroupant les actions à exécuter pour chaque états.
+
 class StateActions:
     lineFollowerState = RightAhead([0,0,1,0,0])
     lastLineFollowerState = RightAhead([0,0,1,0,0])

@@ -1,3 +1,5 @@
+# Fichier regroupant les actions à exécuter pour chaque états de la machine à état secondaire du suiveur de ligne.
+
 class LineFollowerActions:
     def RightAhead(self):
         self._forward = True
